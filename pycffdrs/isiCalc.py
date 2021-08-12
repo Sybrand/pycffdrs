@@ -20,7 +20,7 @@ Technical ReportST-X-3, Forestry Canada, Ottawa, Ontario."
 from math import exp
 from numba import jit
 
-@jit(nopython=True)
+@jit
 def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
     """
     Computes the Initial Spread Index From the FWI System.

@@ -23,7 +23,7 @@ Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 from math import pow
 from numba import jit
 
-@jit(nopython=True)
+@jit
 def buiCalc(dmc: float, dc: float) -> float:
     """
     Buildup Index Calculation. A single bui value.

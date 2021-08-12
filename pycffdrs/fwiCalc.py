@@ -23,7 +23,7 @@ Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 from math import exp, log
 from numba import jit
 
-@jit(nopython=True)
+@jit
 def fwiCalc(isi: float, bui: float) -> float:
     """
     Fire Weather Index Calculation. Returns a single fwi value.
