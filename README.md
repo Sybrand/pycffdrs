@@ -26,4 +26,5 @@ poetry publish -r testpypi
 
 ## License
 
-Using the GNU GENERAL PUBLIC LICENSE Version 2, for no other reason than to match https://cran.r-project.org/web/packages/cffdrs/index.html.
+This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2, as it's a derivative work of
+ https://cran.r-project.org/web/packages/cffdrs/index.html.
