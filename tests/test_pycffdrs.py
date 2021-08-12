@@ -49,3 +49,17 @@ def test_ISICalc():
         fbpMod = random.randint(0, 1) == 1
         assert ISIcalc(ffmc, ws, fbpMod) == cffdrs._ISIcalc(ffmc, ws, fbpMod)[0]
 
+
+def test_BEcalc():
+    # load cffdrs R package.
+    cffdrs = importr('cffdrs')
+    # using a seed (for determinism) - run through a bunch of random iterations comparing our output
+    # with that of the R package.
+    random.seed(42)
+    for _ in range(100):
+        # TODO
+        assert False
+
+def test_evertyhing_else():
+    # TODO
+    assert False
