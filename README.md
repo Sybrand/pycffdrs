@@ -5,7 +5,15 @@ Python port of https://cran.r-project.org/package=cffdrs
 
 ## Technical notes
 
-For numba to work, we need python >=3.8,<3.10
+### Coding conventions
+
+Matching the R code as close as possible, ignoring python conventions in favour of
+looking more like the R code.
+
+### Numba - http://numba.pydata.org/
+
+- Using numba to speed up calculations
+- For numba to work, we need python >=3.8,<3.10
 
 ### Publishing
 
