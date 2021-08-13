@@ -3,6 +3,15 @@
 
 Python port of https://cran.r-project.org/package=cffdrs
 
+The intention is to:
+-have the python port output the exact same values as the R version.
+--because we want an identical functional copy.
+--thus any bugs in the R code will be reproduced exactly.
+-have code look as close as possible to the R code.
+--because it's easier to find bugs, track changes made in the R code.
+--thus code style may not follow python conventions.
+--thus code is sometimes not as efficient (may decide to optimize in later versions).
+
 ## Technical notes
 
 ### Coding conventions

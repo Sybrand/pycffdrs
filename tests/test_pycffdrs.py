@@ -4,12 +4,14 @@ Test pycffdrs by comparing it to the R cffdrs package.
 
 NOTE: This test assumes you have R and the cffdrs package installed!
 """
+from math import radians
 import random
 from rpy2.robjects.packages import importr
 from pycffdrs import __version__
 from pycffdrs.fwiCalc import fwiCalc
 from pycffdrs.buiCalc import buiCalc
 from pycffdrs.isiCalc import ISIcalc
+from pycffdrs.BEcalc import BEcalc
 
 def test_version():
     assert __version__ == '0.0.3'
@@ -56,10 +58,10 @@ def test_BEcalc():
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
     # with that of the R package.
     random.seed(42)
+    fuel_types = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "M1", "M2", "M3",
+            "M4","S1", "S2", "S3", "O1A", "O1B")
     for _ in range(100):
-        # TODO
-        assert False
+        FUELTYPE = fuel_types[random.randint(0, len(fuel_types)-1)]
+        BUI = random.uniform(0, 100)
+        assert BEcalc(FUELTYPE, BUI) == cffdrs._BEcalc(FUELTYPE, BUI)[0]
 
-def test_evertyhing_else():
-    # TODO
-    assert False
