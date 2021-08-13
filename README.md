@@ -26,6 +26,8 @@ looking more like the R code.
 
 ### Publishing
 
+Currently publishing to TestPyPI: https://test.pypi.org/project/pycffdrs/
+
 ```bash
 poetry build
 poetry config repositories.testpypi https://test.pypi.org/legacy/
