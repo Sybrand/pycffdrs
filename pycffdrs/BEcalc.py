@@ -9,10 +9,11 @@ Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
 from math import exp, log
-from numba import jit
+import numpy as np
+from numba import jit, prange
 
-@jit
-def BEcalc(FUELTYPE: str, BUI: float) -> float:
+@jit(nopython=True, parallel=True, cache=True)
+def BEcalc(FUELTYPE, BUI):
     """
     Computes the Buildup Effect on Fire Spread Rate.
 
@@ -33,11 +34,17 @@ def BEcalc(FUELTYPE: str, BUI: float) -> float:
     # names(BUIo) <- names(Q)<-d
     # It would be nice to use a dictionary, but haven't figured that out in numba yet, so
     # for now we just get the index once.
-    index = d.index(FUELTYPE)
+    size = len(FUELTYPE)
+    result = np.empty(size)
     
-    #Eq. 54 (FCFDG 1992) The Buildup Effect
-    if BUI > 0 and BUIo[index] > 0:
-        BE = exp(50 * log(Q[index]) * (1 / BUI - 1 / BUIo[index]))
-    else:
-        BE = 1
-    return BE
+    # Iterating - this works - but I'm sure there's a more elegant way to do it using numpy
+    for index in prange(size):
+        fuel_type_index = d.index(FUELTYPE[index])
+        
+        #Eq. 54 (FCFDG 1992) The Buildup Effect
+        if BUI[index] > 0 and BUIo[fuel_type_index] > 0:
+            BE = exp(50 * log(Q[fuel_type_index]) * (1 / BUI[index] - 1 / BUIo[fuel_type_index]))
+        else:
+            BE = 1
+        result[index] = BE
+    return result
