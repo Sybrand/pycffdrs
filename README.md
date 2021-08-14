@@ -14,6 +14,10 @@ The intention is to:
 
 ## Technical notes
 
+Busy figuring out best way to get the kind of performance that R gives. Most of the functions
+aren't vector ready yet. BEcalc can take vectors - but still fuguring out how I can make
+maximul use of numpy instead of iterating myself.
+
 ### Coding conventions
 
 Matching the R code as close as possible, ignoring python conventions in favour of
