@@ -35,18 +35,18 @@ def BEcalc(FUELTYPE, BUI):
 
     # The R code uses names to effectively create a dictionary:
     # names(BUIo) <- names(Q)<-d
-    lookup = Dict.empty(
+    fuel_type_lookup = Dict.empty(
         key_type=types.unicode_type,
         value_type=types.int64,
     )
     for count, value in enumerate(d):
-        lookup[value] = count
+        fuel_type_lookup[value] = count
 
     size = len(FUELTYPE)
     result = np.empty(size)
     # Iterating - this works - but I'm sure there's a more elegant way to do it using numpy
     for index in prange(size):
-        fuel_type_index = lookup[FUELTYPE[index]]
+        fuel_type_index = fuel_type_lookup[FUELTYPE[index]]
         
         #Eq. 54 (FCFDG 1992) The Buildup Effect
         if BUI[index] > 0 and BUIo[fuel_type_index] > 0:
