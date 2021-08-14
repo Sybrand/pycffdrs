@@ -6,6 +6,7 @@ NOTE: This test assumes you have R and the cffdrs package installed!
 """
 import random
 import time
+from numba.typed import List
 from rpy2.robjects.packages import importr
 from rpy2.robjects.vectors import FloatVector, StrVector
 from pycffdrs import __version__
@@ -31,9 +32,11 @@ def test_BEcalc():
     for _ in range(iterations):
         FUELTYPE = [fuel_types[random.randint(0, len(fuel_types)-1)] for x in range(array_length)]
         BUI = [random.uniform(0, 100) for x in range(array_length)]
+
         start = time.time()
-        python_result = BEcalc(FUELTYPE, BUI)
+        python_result = BEcalc(List(FUELTYPE), List(BUI))
         python_time += time.time() - start
+
         start = time.time()
         r_result = cffdrs._BEcalc(StrVector(FUELTYPE), FloatVector(BUI))
         r_time += time.time() - start

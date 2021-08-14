@@ -8,9 +8,12 @@ Fire Danger Group (FCFDG) (1992). Development and Structure of the
 Canadian Forest Fire Behavior Prediction System." Technical Report 
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
+import enum
 from math import exp, log
 import numpy as np
 from numba import jit, prange
+from numba.core import types
+from numba.typed import Dict
 
 @jit(nopython=True, parallel=True, cache=True)
 def BEcalc(FUELTYPE, BUI):
@@ -32,14 +35,18 @@ def BEcalc(FUELTYPE, BUI):
 
     # The R code uses names to effectively create a dictionary:
     # names(BUIo) <- names(Q)<-d
-    # It would be nice to use a dictionary, but haven't figured that out in numba yet, so
-    # for now we just get the index once.
+    lookup = Dict.empty(
+        key_type=types.unicode_type,
+        value_type=types.int64,
+    )
+    for count, value in enumerate(d):
+        lookup[value] = count
+
     size = len(FUELTYPE)
     result = np.empty(size)
-    
     # Iterating - this works - but I'm sure there's a more elegant way to do it using numpy
     for index in prange(size):
-        fuel_type_index = d.index(FUELTYPE[index])
+        fuel_type_index = lookup[FUELTYPE[index]]
         
         #Eq. 54 (FCFDG 1992) The Buildup Effect
         if BUI[index] > 0 and BUIo[fuel_type_index] > 0:
