@@ -23,6 +23,7 @@ from numba import jit
 @jit
 def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
     """
+    TODO: switch to using numpy arrays as in fwi
     Computes the Initial Spread Index From the FWI System.
 
     Keyword arguments:

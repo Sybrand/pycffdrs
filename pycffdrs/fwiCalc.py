@@ -20,11 +20,12 @@ Development and structure of the Canadian Forest Fire Weather
 Index System. 1987. Van Wagner, C.E. Canadian Forestry Service,
 Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 """
-from math import exp, log
+import numpy as np
+from numpy import exp, log
 from numba import jit
 
 @jit
-def fwiCalc(isi: float, bui: float) -> float:
+def fwiCalc(isi, bui):
     """
     Fire Weather Index Calculation. Returns a single fwi value.
 
@@ -33,13 +34,9 @@ def fwiCalc(isi: float, bui: float) -> float:
     bui -- Buildup Index
     """
     #Eqs. 28b, 28a, 29
-    if bui > 80:
-        bb = 0.1 * isi * (1000/(25 + 108.64/exp(0.023 * bui)))
-    else:
-        bb = 0.1 * isi * (0.626 * (bui**0.809) + 2)
+    bb = np.where(bui > 80,
+        0.1 * isi * (1000/(25 + 108.64/exp(0.023 * bui))),
+        0.1 * isi * (0.626 * (bui**0.809) + 2))
     #Eqs. 30b, 30a
-    if bb <= 1:
-        fwi = bb
-    else:
-        fwi = exp(2.72 * ((0.434 * log(bb))**0.647))
+    fwi = np.where(bb <= 1, bb, exp(2.72 * ((0.434 * log(bb))**0.647)))
     return fwi

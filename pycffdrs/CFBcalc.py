@@ -9,6 +9,7 @@ from numba import jit
 @jit
 def CFBcalc(FUELTYPE: str, FMC: float, SFC: float, ROS: float, CBH: float, option: str = "CFB") -> float:
     """
+    TODO: Switch to using numpy arrays as in fwiCalc
     Calculate Calculate Crown Fraction Burned. To calculate CFB, we also
       need to calculate Critical surface intensity (CSI), and Surface fire
       rate of spread (RSO). The value of each of these equations can be

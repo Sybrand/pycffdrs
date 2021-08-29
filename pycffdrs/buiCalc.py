@@ -26,6 +26,7 @@ from numba import jit
 @jit
 def buiCalc(dmc: float, dc: float) -> float:
     """
+    # TODO: switch to using numpy arrays - as done in fwiCalc
     Buildup Index Calculation. A single bui value.
 
     Keyword arguments:

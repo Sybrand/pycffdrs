@@ -23,6 +23,10 @@ maximul use of numpy instead of iterating myself.
 Matching the R code as close as possible, ignoring python conventions in favour of
 looking more like the R code.
 
+### Numpy
+
+- Making use of numpy extensively.
+
 ### Numba - http://numba.pydata.org/
 
 - Using numba to speed up calculations

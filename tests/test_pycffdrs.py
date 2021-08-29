@@ -6,6 +6,7 @@ NOTE: This test assumes you have R and the cffdrs package installed!
 """
 import random
 import time
+import numpy as np
 from numba.typed import List
 from rpy2.robjects.packages import importr
 from rpy2.robjects.vectors import FloatVector, StrVector
@@ -52,9 +53,13 @@ def test_fwiCalc():
     # with that of the R package.
     random.seed(42)
     for _ in range(100):
-        isi = random.uniform(0, 100)
-        bui = random.uniform(0, 100)
-        assert fwiCalc(isi, bui) == cffdrs._fwiCalc(isi, bui)[0]
+        isi = [random.uniform(0, 100) for _ in range(100)]
+        bui = [random.uniform(0, 100) for _ in range(100)]
+        r_result = cffdrs._fwiCalc(FloatVector(isi), FloatVector(bui))
+        python_result = fwiCalc(np.array(isi), np.array(bui))
+
+        for actual, expected in zip(python_result, r_result):
+            assert actual == expected
 
 
 def test_buiCalc():
