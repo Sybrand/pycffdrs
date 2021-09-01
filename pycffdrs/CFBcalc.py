@@ -2,14 +2,15 @@
 All code is based on the R project: https://cran.r-project.org/package=cffdrs
 
 """
-from math import exp
+import numpy as np
+from numpy import ndarray
+from numpy import exp
 from numba import jit
 
 
 @jit
-def CFBcalc(FUELTYPE: str, FMC: float, SFC: float, ROS: float, CBH: float, option: str = "CFB") -> float:
+def CFBcalc(FUELTYPE: ndarray, FMC: ndarray, SFC: ndarray, ROS: ndarray, CBH: ndarray, option: str = "CFB") -> ndarray:
     """
-    TODO: Switch to using numpy arrays as in fwiCalc
     Calculate Calculate Crown Fraction Burned. To calculate CFB, we also
       need to calculate Critical surface intensity (CSI), and Surface fire
       rate of spread (RSO). The value of each of these equations can be
@@ -44,6 +45,5 @@ def CFBcalc(FUELTYPE: str, FMC: float, SFC: float, ROS: float, CBH: float, optio
     if option == "RSO":
         return RSO
     # Eq. 58 (FCFDG 1992) Crown fraction burned
-    if ROS > RSO:
-        CFB = 1 - exp(-0.23 * (ROS - RSO))
+    CFB = np.where(ROS > RSO, 1 - exp(-0.23 * (ROS - RSO)), CFB)
     return CFB

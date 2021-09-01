@@ -31,7 +31,8 @@ def test_BEcalc():
     python_time = 0
     r_time = 0
     for _ in range(iterations):
-        FUELTYPE = [fuel_types[random.randint(0, len(fuel_types)-1)] for x in range(array_length)]
+        FUELTYPE = [fuel_types[random.randint(
+            0, len(fuel_types)-1)] for x in range(array_length)]
         BUI = [random.uniform(0, 100) for x in range(array_length)]
 
         start = time.time()
@@ -99,11 +100,19 @@ def test_CFBCalc():
 
     options = ("CFB", "CSI", "RSO")
     for _ in range(100):
-        FUELTYPE = fuel_types[random.randint(0, len(fuel_types)-1)]
+        array_length = random.randint(1, 100)
+        FUELTYPE = [fuel_types[random.randint(
+            0, len(fuel_types)-1)] for x in range(array_length)]
         option = options[random.randint(0, len(options)-1)]
-        FMC = random.uniform(0, 100)
-        SFC = random.uniform(0, 100)
-        ROS = random.uniform(0, 100)
-        CBH = random.uniform(0, 1)
-        assert CFBcalc(FUELTYPE, FMC, SFC, ROS, CBH, option) == cffdrs._CFBcalc(
-            FUELTYPE, FMC, SFC, ROS, CBH, option)[0]
+        FMC = [random.uniform(0, 100) for x in range(array_length)]
+        SFC = [random.uniform(0, 100) for x in range(array_length)]
+        ROS = [random.uniform(0, 100) for x in range(array_length)]
+        CBH = [random.uniform(0, 1) for x in range(array_length)]
+        python_result = CFBcalc(np.array(FUELTYPE), np.array(FMC),
+                                np.array(SFC), np.array(ROS),
+                                np.array(CBH), option)
+        r_result = cffdrs._CFBcalc(StrVector(FUELTYPE), FloatVector(FMC),
+                                   FloatVector(SFC), FloatVector(ROS),
+                                   FloatVector(CBH), option)
+        for actual, expected in zip(python_result, r_result):
+            assert actual == expected
