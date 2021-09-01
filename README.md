@@ -12,6 +12,48 @@ The intention is to:
   - thus code style may not follow python conventions.
   - thus code is sometimes not as efficient (may decide to optimize in later versions).
 
+## Roadmap
+
+- [ ] local linting
+- [ ] github actions (static analysis, unit tests)
+- [x] BEcalc
+- [ ] BROScalc
+- [ ] buiCalc
+- [ ] C6calc
+- [x] CFBcalc
+- [ ] dcCalc
+- [ ] direction
+- [ ] DISTtcalc
+- [ ] dmcCalc
+- [ ] fbp
+- [ ] FBPcalc
+- [ ] fbpRaster
+- [ ] ffmcCalc
+- [ ] Flcalc
+- [ ] fireSeason
+- [ ] FMCcalc
+- [ ] FROScalc
+- [ ] fwi
+- [x] fwiCalc
+- [ ] fwiRaster
+- [ ] getvaluesblock_staticfix
+- [ ] gfmc
+- [ ] hffmc
+- [ ] hffmcRaster
+- [ ] ISIcalc
+- [ ] LBcalc
+- [ ] LBtcalc
+- [ ] lros
+- [ ] pros
+- [ ] ROScalc
+- [ ] ROStcalc
+- [ ] ROSthetacalc
+- [ ] sdmc
+- [ ] SFCcalc
+- [ ] Slopecalc
+- [ ] TFCcalc
+- [ ] winter_DC
+
 ## Technical notes
 
 Busy figuring out best way to get the kind of performance that R gives. Most of the functions
