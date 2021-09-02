@@ -60,6 +60,35 @@ Busy figuring out best way to get the kind of performance that R gives. Most of 
 aren't vector ready yet. BEcalc can take vectors - but still fuguring out how I can make
 maximul use of numpy instead of iterating myself.
 
+### Development environment
+
+TODO: in progress
+0. System dependencies
+
+```bash
+ sudo apt-get install gdal-dev
+```
+1. Poetry
+- Install python poetry https://python-poetry.org/
+2. Install R
+```bash
+sudo apt-get install r-base
+```
+3. Install python dependancies
+```bash
+poetry install
+```
+4. Install R dependancies (used for testing)
+```bash
+R
+install.packages('rgdal')
+install.packages('cffdrs')
+```
+4. Run tests
+```bash
+poetry shell
+pytest
+```
 ### Coding conventions
 
 Matching the R code as close as possible, ignoring python conventions in favour of
