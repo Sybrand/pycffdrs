@@ -60,16 +60,30 @@ Busy figuring out best way to get the kind of performance that R gives. Most of 
 aren't vector ready yet. BEcalc can take vectors - but still fuguring out how I can make
 maximul use of numpy instead of iterating myself.
 
-### Development environment
+### Development environment (Ubuntu 20.04)
 
-TODO: in progress
-0. System dependencies
+These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment has additional requirements
+that the production environment does not require. The unit tests compare the output of the original R cffdrs components,
+and as such require R, the R library cffdrs and python library rpy2.
+
+0. Install system dependencies
 
 ```bash
- sudo apt-get install gdal-dev
+ sudo apt-get install libgdal-dev
 ```
-1. Poetry
-- Install python poetry https://python-poetry.org/
+1. Install Python Poetry
+
+Install python poetry https://python-poetry.org/ ; right now the install doesn't work very well on Ubuntu 20.04 :()
+
+```bash
+sudo apt install python-is-python3
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+```
+
+Add ~/.local/bin to your path - so that poetry can be found.
+
+PATH="~/.local/bin:${PATH}"
+
 2. Install R
 ```bash
 sudo apt-get install r-base
