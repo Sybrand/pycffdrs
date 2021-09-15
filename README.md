@@ -14,7 +14,7 @@ The intention is to:
 
 ## Roadmap
 
-- [ ] local linting
+- [x] local linting
 - [ ] github actions (static analysis, unit tests)
 - [x] BEcalc
 - [ ] BROScalc

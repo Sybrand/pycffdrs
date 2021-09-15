@@ -9,7 +9,9 @@ from numba import jit
 
 
 @jit
-def CFBcalc(FUELTYPE: ndarray, FMC: ndarray, SFC: ndarray, ROS: ndarray, CBH: ndarray, option: str = "CFB") -> ndarray:
+def CFBcalc(FUELTYPE: ndarray, # pylint: disable=unused-argument
+            FMC: ndarray, SFC: ndarray, ROS: ndarray, CBH: ndarray,
+            option: str = "CFB") -> ndarray:
     """
     Calculate Calculate Crown Fraction Burned. To calculate CFB, we also
       need to calculate Critical surface intensity (CSI), and Surface fire

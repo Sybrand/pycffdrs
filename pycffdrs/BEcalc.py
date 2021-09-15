@@ -8,7 +8,6 @@ Fire Danger Group (FCFDG) (1992). Development and Structure of the
 Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-import enum
 from math import exp, log
 import numpy as np
 from numba import jit, prange
@@ -46,7 +45,8 @@ def BEcalc(FUELTYPE, BUI):
     size = len(FUELTYPE)
     result = np.empty(size)
     # Iterating - this works - but I'm sure there's a more elegant way to do it using numpy
-    for index in prange(size):
+    # Pylint incorrectly thinks that prange is not iterable.
+    for index in prange(size):  # pylint: disable=not-an-iterable
         fuel_type_index = fuel_type_lookup[FUELTYPE[index]]
 
         # Eq. 54 (FCFDG 1992) The Buildup Effect

@@ -17,8 +17,12 @@ from pycffdrs.isiCalc import ISIcalc
 from pycffdrs.BEcalc import BEcalc
 from pycffdrs.CFBcalc import CFBcalc
 
+# pylint: disable=protected-access
+# pylint: disable=no-member
 
 def test_BEcalc():
+    """ Test BEcalc by comparing output from R with that of Python.
+    """
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -48,6 +52,8 @@ def test_BEcalc():
 
 
 def test_fwiCalc():
+    """ Test fwiCalc by comparing output from R with that of Python.
+    """
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -64,6 +70,8 @@ def test_fwiCalc():
 
 
 def test_buiCalc():
+    """ Test buiCalc by comparing output from R with that of Python.
+    """
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -72,10 +80,12 @@ def test_buiCalc():
     for _ in range(100):
         dc = random.uniform(0, 600)
         dmc = random.uniform(0, 100)
-        assert buiCalc(dc, dmc) == cffdrs._buiCalc(dc, dmc)[0]
+        assert buiCalc(dmc, dc) == cffdrs._buiCalc(dmc, dc)[0]
 
 
 def test_ISICalc():
+    """ Test ISICalc by comparing output from R with that of Python.
+    """
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -90,6 +100,7 @@ def test_ISICalc():
 
 
 def test_CFBCalc():
+    """ Test CFBCalc by comparing output from R with that of Python. """
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output

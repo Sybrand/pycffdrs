@@ -7,14 +7,14 @@ Comments taken from the R project relating to this module are:
 Van Wagner (1985) as listed below, except for the modification for fbp
 takene from FCFDG (1992).
 
-Equations and FORTRAN program for the Canadian Forest Fire 
-Weather Index System. 1985. Van Wagner, C.E.; Pickett, T.L. 
-Canadian Forestry Service, Petawawa National Forestry 
-Institute, Chalk River, Ontario. Forestry Technical Report 33. 
+Equations and FORTRAN program for the Canadian Forest Fire
+Weather Index System. 1985. Van Wagner, C.E.; Pickett, T.L.
+Canadian Forestry Service, Petawawa National Forestry
+Institute, Chalk River, Ontario. Forestry Technical Report 33.
 18 p.
 
-Forestry Canada  Fire Danger Group (FCFDG) (1992). Development and 
-Structure of the Canadian Forest Fire Behavior Prediction System."  
+Forestry Canada  Fire Danger Group (FCFDG) (1992). Development and
+Structure of the Canadian Forest Fire Behavior Prediction System."
 Technical ReportST-X-3, Forestry Canada, Ottawa, Ontario."
 """
 from math import exp
@@ -36,7 +36,7 @@ def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
     #Eq. 24 - Wind Effect
     #the ifelse, also takes care of the ISI modification for the fbp functions
     # This modification is Equation 53a in FCFDG (1992)
-    if ws >= 40 and fbpMod==True:
+    if ws >= 40 and fbpMod is True:
         fW = 12 * (1 - exp(-0.0818 * (ws - 28)))
     else:
         fW = exp(0.05039 * ws)
