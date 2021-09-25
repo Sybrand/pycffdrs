@@ -14,46 +14,51 @@ The intention is to:
 
 ## Roadmap
 
+### 1st release (for basic fire behaviour calculations)
+
 - [x] local linting
 - [ ] github actions linting
 - [ ] github actions (static analysis, unit tests)
+- [ ] BROScalc
+- [x] CFBcalc
+- [ ] buiCalc
+- [ ] DISTtcalc
+- [ ] ffmcCalc
+- [ ] Flcalc
+- [ ] FMCcalc
+- [ ] FROScalc
+- [ ] hffmc
+- [ ] ISIcalc
+- [ ] LBcalc
+- [ ] LBtcalc
+- [ ] ROScalc
+- [ ] ROStcalc
+- [ ] SFCcalc
+- [ ] Slopecalc
+- [ ] TFCcalc
+
+### 2nd release
+
 - [x] BEcalc
 - [ ] BEcalc - make it take numpy arrays
-- [ ] BROScalc
-- [ ] buiCalc
 - [ ] C6calc
-- [x] CFBcalc
 - [ ] dcCalc
 - [ ] direction
-- [ ] DISTtcalc
 - [ ] dmcCalc
 - [ ] fbp
 - [ ] FBPcalc
 - [ ] fbpRaster
-- [ ] ffmcCalc
-- [ ] Flcalc
 - [ ] fireSeason
-- [ ] FMCcalc
-- [ ] FROScalc
 - [ ] fwi
 - [x] fwiCalc
 - [ ] fwiRaster
 - [ ] getvaluesblock_staticfix
 - [ ] gfmc
-- [ ] hffmc
 - [ ] hffmcRaster
-- [ ] ISIcalc
-- [ ] LBcalc
-- [ ] LBtcalc
 - [ ] lros
 - [ ] pros
-- [ ] ROScalc
-- [ ] ROStcalc
 - [ ] ROSthetacalc
 - [ ] sdmc
-- [ ] SFCcalc
-- [ ] Slopecalc
-- [ ] TFCcalc
 - [ ] winter_DC
 
 ## Technical notes
