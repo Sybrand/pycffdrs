@@ -17,8 +17,9 @@ Forestry Canada  Fire Danger Group (FCFDG) (1992). Development and
 Structure of the Canadian Forest Fire Behavior Prediction System."
 Technical ReportST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-from math import exp
+from numpy import exp
 from numba import jit
+
 
 @jit
 def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
@@ -31,17 +32,17 @@ def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
     ws -- Wind Speed (km/h)
     fbpMod -- TRUE/FALSE if using the fbp modification at the extreme end
     """
-    #Eq. 10 - Moisture content
+    # Eq. 10 - Moisture content
     fm = 147.2 * (101 - ffmc)/(59.5 + ffmc)
-    #Eq. 24 - Wind Effect
-    #the ifelse, also takes care of the ISI modification for the fbp functions
+    # Eq. 24 - Wind Effect
+    # the ifelse, also takes care of the ISI modification for the fbp functions
     # This modification is Equation 53a in FCFDG (1992)
     if ws >= 40 and fbpMod is True:
         fW = 12 * (1 - exp(-0.0818 * (ws - 28)))
     else:
         fW = exp(0.05039 * ws)
-    #Eq. 25 - Fine Fuel Moisture
+    # Eq. 25 - Fine Fuel Moisture
     fF = 91.9 * exp(-0.1386 * fm) * (1 + (fm**5.31) / 49300000)
-    #Eq. 26 - Spread Index Equation
+    # Eq. 26 - Spread Index Equation
     isi = 0.208 * fW * fF
     return isi
