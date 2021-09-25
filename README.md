@@ -15,8 +15,10 @@ The intention is to:
 ## Roadmap
 
 - [x] local linting
+- [ ] github actions linting
 - [ ] github actions (static analysis, unit tests)
 - [x] BEcalc
+- [ ] BEcalc - make it take numpy arrays
 - [ ] BROScalc
 - [ ] buiCalc
 - [ ] C6calc
@@ -66,12 +68,13 @@ These instructions assume a clean Ubuntu 20.04 desktop installation. The develop
 that the production environment does not require. The unit tests compare the output of the original R cffdrs components,
 and as such require R, the R library cffdrs and python library rpy2.
 
-0. Install system dependencies
+#### Install system dependencies
 
 ```bash
  sudo apt-get install libgdal-dev
 ```
-1. Install Python Poetry
+
+#### Install Python Poetry
 
 Install python poetry https://python-poetry.org/ ; right now the install doesn't work very well on Ubuntu 20.04 :()
 
@@ -84,25 +87,33 @@ Add ~/.local/bin to your path - so that poetry can be found.
 
 PATH="~/.local/bin:${PATH}"
 
-2. Install R
+#### Install R
+
 ```bash
 sudo apt-get install r-base
 ```
-3. Install python dependancies
+
+#### Install python dependancies
+
 ```bash
 poetry install
 ```
-4. Install R dependancies (used for testing)
+
+#### Install R dependancies (used for testing)
+
 ```bash
 R
 install.packages('rgdal')
 install.packages('cffdrs')
 ```
-4. Run tests
+
+#### Run tests
+
 ```bash
 poetry shell
 pytest
 ```
+
 ### Coding conventions
 
 Matching the R code as close as possible, ignoring python conventions in favour of
