@@ -20,6 +20,7 @@ from pycffdrs.CFBcalc import CFBcalc
 # pylint: disable=protected-access
 # pylint: disable=no-member
 
+
 def test_BEcalc():
     """ Test BEcalc by comparing output from R with that of Python.
     """

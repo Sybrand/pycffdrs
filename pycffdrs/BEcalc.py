@@ -8,14 +8,14 @@ Fire Danger Group (FCFDG) (1992). Development and Structure of the
 Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-from math import exp, log
+from numpy import exp, log
 import numpy as np
 from numba import jit, prange
 from numba.core import types
 from numba.typed import Dict
 
 
-@jit(nopython=True, parallel=True, cache=True)
+@jit
 def BEcalc(FUELTYPE, BUI):
     """
     Computes the Buildup Effect on Fire Spread Rate.

@@ -9,7 +9,7 @@ from numba import jit
 
 
 @jit
-def CFBcalc(FUELTYPE: ndarray, # pylint: disable=unused-argument
+def CFBcalc(FUELTYPE: ndarray,  # pylint: disable=unused-argument
             FMC: ndarray, SFC: ndarray, ROS: ndarray, CBH: ndarray,
             option: str = "CFB") -> ndarray:
     """

@@ -22,6 +22,7 @@ Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 """
 from numba import jit
 
+
 @jit
 def buiCalc(dmc: float, dc: float) -> float:
     """
@@ -32,19 +33,19 @@ def buiCalc(dmc: float, dc: float) -> float:
     dc -- Drought Code
     dmc -- Duff Moisture Code
     """
-    #Eq. 27a
+    # Eq. 27a
     if dmc == 0 and dc == 0:
         bui1 = 0
     else:
         bui1 = 0.8 * dc * dmc/(dmc + 0.4 * dc)
-    #Eq. 27b - next 3 lines
+    # Eq. 27b - next 3 lines
     if dmc == 0:
         p = 0
     else:
         p = (dmc - bui1)/dmc
     cc = 0.92 + pow((0.0114 * dmc), 1.7)
     bui0 = dmc - cc * p
-    #Constraints
+    # Constraints
     bui0 = max(bui0, 0)
     if bui1 < dmc:
         bui1 = bui0

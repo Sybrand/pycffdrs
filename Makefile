@@ -9,3 +9,10 @@ endif
 lint:
 	# Run lint.
 	$(POETRY_RUN) pylint --rcfile=.pylintrc pycffdrs/*.py tests/*.py;
+
+style:
+	$(POETRY_RUN) pycodestyle
+
+test:
+	# Run tests
+	$(POETRY_RUN) pytest
