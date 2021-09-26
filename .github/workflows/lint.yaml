@@ -43,5 +43,4 @@ jobs:
             ${{ runner.os }}-poetry-cache-
       - name: Lint
         run: |
-          source ~/.poetry/env
           poetry run pylint --rcfile=.pylintrc pycffdrs/*.py tests/*.py;
