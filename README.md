@@ -17,7 +17,7 @@ The intention is to:
 ### 1st release (for basic fire behaviour calculations)
 
 - [x] local linting
-- [ ] github actions linting
+- [x] github actions linting
 - [ ] github actions (static analysis, unit tests)
 - [ ] BROScalc
 - [x] CFBcalc
