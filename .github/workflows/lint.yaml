@@ -41,6 +41,10 @@ jobs:
           key: ${{ runner.os }}-poetry-cache-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-cache-
+      - name: Install python dependencies
+        working-directory: ./api
+        run: |
+          poetry install
       - name: Lint
         run: |
           poetry run pylint --rcfile=.pylintrc pycffdrs/*.py tests/*.py;
