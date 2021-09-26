@@ -42,7 +42,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-poetry-cache-
       - name: Install python dependencies
-        working-directory: ./api
         run: |
           poetry install
       - name: Lint
