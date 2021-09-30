@@ -8,9 +8,33 @@ jobs:
   lint:
     name: Test
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [3.8]
+        R: ["3.5.2"]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.R }}
+      - name: Cache renv (api)
+        # You have to create the renv.lock file on your local machine
+        # install.packages("renv")
+        # renv::install("cffdrs", dependencies = TRUE)
+        # renv::snapshot()
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.RENV_PATHS_ROOT }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+      - name: Restore R packages
+        working-directory: ./r
+        shell: Rscript {0}
+        run: |
+          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+          renv::restore()
       - name: Cache poetry installer
         uses: actions/cache@v2
         id: cache-poetry-installer
@@ -44,6 +68,6 @@ jobs:
       - name: Install python dependencies
         run: |
           poetry install
-      - name: Lint
+      - name: Test
         run: |
           poetry run pytest
