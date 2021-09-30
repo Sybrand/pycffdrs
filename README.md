@@ -148,3 +148,6 @@ poetry publish -r testpypi
 
 This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2, as it's a derivative work of
 https://cran.r-project.org/web/packages/cffdrs/index.html.
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sybrand_pycffdrs&metric=alert_status)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
