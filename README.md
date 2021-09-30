@@ -18,7 +18,7 @@ The intention is to:
 
 - [x] local linting
 - [x] github actions linting
-- [ ] github actions (static analysis, unit tests)
+- [x] github actions (static analysis, unit tests)
 - [ ] BROScalc
 - [x] CFBcalc
 - [ ] buiCalc
