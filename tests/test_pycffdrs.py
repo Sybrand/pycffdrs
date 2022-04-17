@@ -3,6 +3,8 @@
 Test pycffdrs by comparing it to the R cffdrs package.
 
 NOTE: This test assumes you have R and the cffdrs package installed!
+TODO: Stop using R! We can have our tests run much faster, and simplify our github actions etc. etc. by
+consuming JSON files.
 """
 import random
 import time
@@ -21,9 +23,12 @@ from pycffdrs.CFBcalc import CFBcalc
 # pylint: disable=no-member
 
 
+
 def test_BEcalc():
     """ Test BEcalc by comparing output from R with that of Python.
     """
+    # TODO: stop using R here, switch to using the JSON files. It simplifiest our main project and 
+    # would make tests run faster.
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -73,6 +78,8 @@ def test_fwiCalc():
 def test_buiCalc():
     """ Test buiCalc by comparing output from R with that of Python.
     """
+    # TODO: stop using R here, switch to using the JSON files. It simplifiest our main project and 
+    # would make tests run faster.
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -87,6 +94,8 @@ def test_buiCalc():
 def test_ISICalc():
     """ Test ISICalc by comparing output from R with that of Python.
     """
+    # TODO: stop using R here, switch to using the JSON files. It simplifiest our main project and 
+    # would make tests run faster.
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
@@ -102,6 +111,8 @@ def test_ISICalc():
 
 def test_CFBCalc():
     """ Test CFBCalc by comparing output from R with that of Python. """
+    # TODO: stop using R here, switch to using the JSON files. It simplifiest our main project and 
+    # would make tests run faster.
     # load cffdrs R package.
     cffdrs = importr('cffdrs')
     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
