@@ -22,17 +22,12 @@ def test_BEcalc():
     """
     with open('tests/BEcalc.json') as f:
         data = json.load(f)
-        for sample_index, record in enumerate(data):
+        for record in data:
             FUELTYPE = record.get("FUELTYPE")
             BUI = record.get("BUI")
             r_result = np.array([np.float64(x) for x in record.get("result")])
-            python_result = BEcalc(
-                List(FUELTYPE),
-                List(BUI))
-            
-            for result_index, (actual, expected) in enumerate(zip(python_result, r_result)):
-                error_message = f'sample_index: {sample_index}, result_index: {result_index}, FUELTYPE: {FUELTYPE[result_index]}, BUI: {BUI[result_index]}, actual: {actual}, expected: {expected}'
-                np.testing.assert_equal(actual, expected, err_msg = error_message)
+            python_result = BEcalc(List(FUELTYPE), List(BUI))
+            np.testing.assert_equal(python_result, r_result)
 
 # def test_fwiCalc():
 #     """ Test fwiCalc by comparing output from R with that of Python.
