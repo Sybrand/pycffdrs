@@ -9,13 +9,15 @@ Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
 from numpy import exp, log
+from typing import Dict
+import math
 import numpy as np
-from numba import jit, prange
-from numba.core import types
-from numba.typed import Dict
+# from numba import jit, prange
+# from numba.core import types
+# from numba.typed import Dict
 
 
-@jit
+# @jit
 def BEcalc(FUELTYPE, BUI):
     """
     Computes the Buildup Effect on Fire Spread Rate.
@@ -35,10 +37,7 @@ def BEcalc(FUELTYPE, BUI):
 
     # The R code uses names to effectively create a dictionary:
     # names(BUIo) <- names(Q)<-d
-    fuel_type_lookup = Dict.empty(
-        key_type=types.unicode_type,
-        value_type=types.int64,
-    )
+    fuel_type_lookup : Dict[str, int] = {}
     for count, value in enumerate(d):
         fuel_type_lookup[value] = count
 
@@ -46,8 +45,11 @@ def BEcalc(FUELTYPE, BUI):
     result = np.empty(size)
     # Iterating - this works - but I'm sure there's a more elegant way to do it using numpy
     # Pylint incorrectly thinks that prange is not iterable.
-    for index in prange(size):  # pylint: disable=not-an-iterable
-        fuel_type_index = fuel_type_lookup[FUELTYPE[index]]
+    for index in range(size):  # pylint: disable=not-an-iterable
+        fuel_type_index = fuel_type_lookup.get(FUELTYPE[index], -1)
+        if fuel_type_index == -1:
+            result[index] = math.nan
+            continue
 
         # Eq. 54 (FCFDG 1992) The Buildup Effect
         if BUI[index] > 0 and BUIo[fuel_type_index] > 0:
