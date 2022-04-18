@@ -10,6 +10,7 @@ rpy2 = "^3.5.1"
 
 [tool.poetry.dev-dependencies]
 notebook = "^6.4.10"
+numpy = "^1.22.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

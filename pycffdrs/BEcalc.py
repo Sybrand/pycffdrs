@@ -8,8 +8,8 @@ Fire Danger Group (FCFDG) (1992). Development and Structure of the
 Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-from numpy import exp, log
 from typing import Dict
+from numpy import exp, log
 import numpy as np
 
 
@@ -38,7 +38,7 @@ def BEcalc(FUELTYPE, BUI):
     result = np.empty(size)
 
     for index in range(size):
-        fuel_type_index = fuel_type_lookup.get(FUELTYPE[index], -1)        
+        fuel_type_index = fuel_type_lookup.get(FUELTYPE[index], -1)
         if BUI[index] > 0:
             if fuel_type_index == -1:
                 BE = np.nan

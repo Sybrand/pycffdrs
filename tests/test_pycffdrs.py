@@ -7,8 +7,8 @@ TODO: Stop using R! We can have our tests run much faster, and simplify our gith
 consuming JSON files.
 """
 import json
+from typing import List, Dict
 import numpy as np
-from numba.typed import List
 from pycffdrs import __version__
 from pycffdrs.fwiCalc import fwiCalc
 from pycffdrs.buiCalc import buiCalc
@@ -17,34 +17,30 @@ from pycffdrs.BEcalc import BEcalc
 from pycffdrs.CFBcalc import CFBcalc
 
 
+def generic_test(filename, function, *args : str):
+    """ Generic test function. Given a filename, a function to test, and the names of arguments
+    """
+    with open(filename) as f:
+        data : List[Dict[str, List]] = json.load(f)
+        for record in data:
+            values = []
+            for key in args:
+                values.append(np.array(record.get(key)))
+            r_result = np.array([np.float64(x) for x in record.get("result")])
+            python_result = function(*values)
+            np.testing.assert_equal(python_result, r_result)
+            
+
+
 def test_BEcalc():
     """ Test BEcalc by comparing output from R with that of Python.
     """
-    with open('tests/BEcalc.json') as f:
-        data = json.load(f)
-        for record in data:
-            FUELTYPE = record.get("FUELTYPE")
-            BUI = record.get("BUI")
-            r_result = np.array([np.float64(x) for x in record.get("result")])
-            python_result = BEcalc(List(FUELTYPE), List(BUI))
-            np.testing.assert_equal(python_result, r_result)
+    generic_test('tests/BEcalc.json', BEcalc, 'FUELTYPE', 'BUI')
 
-# def test_fwiCalc():
-#     """ Test fwiCalc by comparing output from R with that of Python.
-#     """
-#     # load cffdrs R package.
-#     cffdrs = importr('cffdrs')
-#     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
-#     # with that of the R package.
-#     random.seed(42)
-#     for _ in range(100):
-#         isi = [random.uniform(0, 100) for _ in range(100)]
-#         bui = [random.uniform(0, 100) for _ in range(100)]
-#         r_result = cffdrs._fwiCalc(FloatVector(isi), FloatVector(bui))
-#         python_result = fwiCalc(np.array(isi), np.array(bui))
-
-#         for actual, expected in zip(python_result, r_result):
-#             assert actual == expected
+def test_fwiCalc():
+    """ Test fwiCalc by comparing output from R with that of Python.
+    """
+    generic_test('tests/fwiCalc.json', fwiCalc, 'isi', 'bui')
 
 
 # def test_buiCalc():
