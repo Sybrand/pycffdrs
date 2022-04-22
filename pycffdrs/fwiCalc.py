@@ -21,12 +21,13 @@ Index System. 1987. Van Wagner, C.E. Canadian Forestry Service,
 Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 """
 import numpy as np
+from numpy import ndarray
 from numpy import exp, log
 from numba import jit
 
 
 @jit
-def fwiCalc(isi, bui):
+def fwiCalc(isi: ndarray, bui: ndarray):
     """
     TODO: add types - see CFBCalc
     Fire Weather Index Calculation. Returns a single fwi value.

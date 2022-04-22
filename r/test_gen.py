@@ -6,10 +6,14 @@ from rpy2.robjects.packages import importr
 from rpy2.robjects.vectors import FloatVector, StrVector
 
 
+def bui_generator(array_length: int) -> List[float]:
+    return [random.uniform(-10, 110) for _ in range(array_length)]
+
+
 class TestGenerator(ABC):
     """ Abstract base class to assist in generating test data. """
 
-    def __init__(self):
+    def __init__(self, filename: str):
         """ Constructor. """
         # Number of iterations to generate. Each iteration is a list of inputs, which matches to a function
         # call to the R function being tests.
@@ -17,17 +21,13 @@ class TestGenerator(ABC):
         # Connect to R.
         self.cffdrs = importr('cffdrs')
         # We include a garbage fuel type.
-        self.fuel_types = ("BLAH", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "M1", "M2", "M3", "M4", "S1", "S2",
-              "S3", "O1A", "O1B")
+        self.fuel_types = ("BLAH", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1",
+                           "M1", "M2", "M3", "M4", "S1", "S2", "S3", "O1A", "O1B")
+        self.filename = filename
 
     def _getRandomFuelType(self):
         """ Randomly select a fuel type (may include garbage) """
         return self.fuel_types[random.randint(0, len(self.fuel_types)-1)]
-
-    def _write_data(self, data: List, filename: str):
-        """ Write results to file """
-        with open(filename, 'w') as outfile:
-            json.dump(data, outfile, indent=4)
 
     def generate(self):
         """ Generate test data. """
@@ -41,16 +41,15 @@ class TestGenerator(ABC):
 
         self.write_data(data)
 
-
     @abstractmethod
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Abstract method. Implement code that creates input data, calls R, and stores inputs + results. """
         pass
 
-    @abstractmethod
     def write_data(self, data: List):
-        """ Abstract method. Implement code that writes data to file. """
-        pass
+        """ Write results to file """
+        with open(self.filename, 'w') as outfile:
+            json.dump(data, outfile, indent=4)
 
 
 class BEcalcGenerator(TestGenerator):
@@ -59,16 +58,12 @@ class BEcalcGenerator(TestGenerator):
         """ Create random input data for BEcalc, and call R. """
         FUELTYPE = [self._getRandomFuelType() for _ in range(array_length)]
         # BUI is from 0 to unlimited, but we include some garbage values.
-        BUI = [random.uniform(-10, 110) for _ in range(array_length)]
+        BUI = bui_generator(array_length)
         # calculate
         r_result = self.cffdrs._BEcalc(StrVector(FUELTYPE), FloatVector(BUI))
         # add to data
-        data.append({'FUELTYPE': FUELTYPE, 'BUI': BUI, 'result': [value for value in r_result]})
-
-    def write_data(self, data: List):
-        """ Write data to file """
-        self._write_data(data, '../tests/BEcalc.json')
-    
+        data.append({'FUELTYPE': FUELTYPE, 'BUI': BUI,
+                    'result': [value for value in r_result]})
 
 class fwiCalcGenerator(TestGenerator):
 
@@ -77,17 +72,24 @@ class fwiCalcGenerator(TestGenerator):
         # initial spread index range is from 0 to unlimited.
         isi = [random.uniform(-10, 110) for _ in range(array_length)]
         # buildup index range is from 0 to inlimited.
-        bui = [random.uniform(-10, 110) for _ in range(array_length)]
+        bui = bui_generator(array_length)
         # calculate
         r_result = self.cffdrs._fwiCalc(FloatVector(isi), FloatVector(bui))
         # add to data
-        data.append({'isi': isi, 'bui': bui, 'result': [value for value in r_result]})
+        data.append({'isi': isi, 'bui': bui, 'result': [
+                    value for value in r_result]})
 
-    def write_data(self, data: List):
-        """ Write data to file """
-        self._write_data(data, '../tests/fwiCalc.json')
+class buiGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for BUIcalc, and call R. """
+        dmc = [random.uniform(-10, 610) for _ in range(array_length)]
+        dc = [random.uniform(-10, 110) for _ in range(array_length)]
+        r_result = self.cffdrs._buiCalc(FloatVector(dmc), FloatVector(dc))
+        data.append({'dmc': dmc, 'dc': dc, 'result': [value for value in r_result]})
 
 
 if __name__ == "__main__":
-    BEcalcGenerator().generate()
-    fwiCalcGenerator().generate()
+    BEcalcGenerator('../tests/BEcalc.json').generate()
+    fwiCalcGenerator('../tests/fwiCalc.json').generate()
+    buiGenerator('../tests/buiCalc.json').generate()

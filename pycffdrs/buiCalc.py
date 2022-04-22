@@ -20,33 +20,31 @@ Development and structure of the Canadian Forest Fire Weather
 Index System. 1987. Van Wagner, C.E. Canadian Forestry Service,
 Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 """
-from numba import jit
+from numpy import ndarray
 
-
-@jit
-def buiCalc(dmc: float, dc: float) -> float:
+def buiCalc(dmc: ndarray, dc: ndarray) -> float:
     """
-    # TODO: switch to using numpy arrays - as done in fwiCalc
-    Buildup Index Calculation. A single bui value.
-
     Keyword arguments:
     dc -- Drought Code
     dmc -- Duff Moisture Code
     """
-    # Eq. 27a
-    if dmc == 0 and dc == 0:
-        bui1 = 0
-    else:
-        bui1 = 0.8 * dc * dmc/(dmc + 0.4 * dc)
-    # Eq. 27b - next 3 lines
-    if dmc == 0:
-        p = 0
-    else:
-        p = (dmc - bui1)/dmc
-    cc = 0.92 + pow((0.0114 * dmc), 1.7)
-    bui0 = dmc - cc * p
-    # Constraints
-    bui0 = max(bui0, 0)
-    if bui1 < dmc:
-        bui1 = bui0
-    return bui1
+    _bui1 = []
+    for _dmc, _dc in zip(dmc, dc):
+        # Eq. 27a
+        if _dmc == 0 and _dc == 0:
+            bui1 = 0
+        else:
+            bui1 = 0.8 * _dc * _dmc/(_dmc + 0.4 * _dc)
+        # Eq. 27b - next 3 lines
+        if _dmc == 0:
+            p = 0
+        else:
+            p = (_dmc - bui1)/_dmc
+        cc = 0.92 + pow((0.0114 * _dmc), 1.7)
+        bui0 = _dmc - cc * p
+        # Constraints
+        bui0 = max(bui0, 0)
+        if bui1 < _dmc:
+            bui1 = bui0
+        _bui1.append(bui1)
+    return _bui1

@@ -42,6 +42,11 @@ def test_fwiCalc():
     """
     generic_test('tests/fwiCalc.json', fwiCalc, 'isi', 'bui')
 
+def test_buiCalc():
+    """ Test buiCalc by comparing output from R with that of Python.
+    """
+    generic_test('tests/buiCalc.json', buiCalc, 'dmc', 'dc')
+
 
 # def test_buiCalc():
 #     """ Test buiCalc by comparing output from R with that of Python.
