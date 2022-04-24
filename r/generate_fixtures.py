@@ -10,7 +10,7 @@ import rpy2.robjects as robjs
 def get_random_guel_type() -> str:
     """ Get a random fuel type """
     # We include a garbage fuel type.
-    fuel_types = ("BLAH", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1",
+    fuel_types = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1",
                   "M1", "M2", "M3", "M4", "S1", "S2", "S3", "O1A", "O1B")
     return fuel_types[random.randint(0, len(fuel_types)-1)]
 

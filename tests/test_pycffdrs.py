@@ -60,24 +60,6 @@ def test_ISIcalc():
     generic_test('tests/ISICalc.json', ISIcalc, 'ffmc', 'ws', 'fbpMod')
 
 
-# def test_ISICalc():
-#     """ Test ISICalc by comparing output from R with that of Python.
-#     """
-#     # TODO: stop using R here, switch to using the JSON files. It simplifiest our main project and
-#     # would make tests run faster.
-#     # load cffdrs R package.
-#     cffdrs = importr('cffdrs')
-#     # using a seed (for determinism) - run through a bunch of random iterations comparing our output
-#     # with that of the R package.
-#     random.seed(42)
-#     for _ in range(100):
-#         ffmc = random.uniform(0, 100)
-#         ws = random.uniform(0, 100)
-#         fbpMod = random.randint(0, 1) == 1
-#         assert ISIcalc(ffmc, ws, fbpMod) == cffdrs._ISIcalc(
-#             ffmc, ws, fbpMod)[0]
-
-
 # def test_CFBCalc():
 #     """ Test CFBCalc by comparing output from R with that of Python. """
 #     # TODO: stop using R here, switch to using the JSON files. It simplifiest our main project and

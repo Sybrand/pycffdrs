@@ -8,12 +8,11 @@ Fire Danger Group (FCFDG) (1992). Development and Structure of the
 Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-from typing import Dict
-from numpy import exp, log, ndarray
+from numpy import exp, log, ndarray, array
 import numpy as np
 
 
-def BEcalc(FUELTYPE, BUI) -> ndarray:
+def BEcalc(FUELTYPE: ndarray, BUI: ndarray) -> ndarray:
     """
     Computes the Buildup Effect on Fire Spread Rate.
 
@@ -30,23 +29,14 @@ def BEcalc(FUELTYPE, BUI) -> ndarray:
     Q = (0.9, 0.7, 0.75, 0.8, 0.8, 0.8, 0.85, 0.9, 0.8, 0.8, 0.8, 0.8, 0.75,
          0.75, 0.75, 1.0, 1.0)
 
-    fuel_type_lookup: Dict[str, int] = {}
-    for count, value in enumerate(d):
-        fuel_type_lookup[value] = count
+    BUIo = dict(zip(d, BUIo))
+    Q = dict(zip(d, Q))
 
-    size = len(FUELTYPE)
-    result = np.empty(size)
+    BUIo = array([BUIo[key] for key in FUELTYPE])
+    Q = array([Q[key] for key in FUELTYPE])
 
-    for index in range(size):
-        fuel_type_index = fuel_type_lookup.get(FUELTYPE[index], -1)
-        if BUI[index] > 0:
-            if fuel_type_index == -1:
-                BE = np.nan
-            elif BUIo[fuel_type_index] > 0:
-                # Eq. 54 (FCFDG 1992) The Buildup Effect
-                BE = exp(50 * log(Q[fuel_type_index]) *
-                         (1 / BUI[index] - 1 / BUIo[fuel_type_index]))
-        else:
-            BE = 1
-        result[index] = BE
-    return result
+    # Eq. 54 (FCFDG 1992) The Buildup Effect
+    BE = np.where((BUI > 0) & (BUIo > 0), exp(50 * log(Q) *
+                                              (1 / BUI - 1 / BUIo)), 1)
+
+    return BE
