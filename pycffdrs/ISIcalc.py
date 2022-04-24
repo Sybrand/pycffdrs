@@ -17,12 +17,12 @@ Forestry Canada  Fire Danger Group (FCFDG) (1992). Development and
 Structure of the Canadian Forest Fire Behavior Prediction System."
 Technical ReportST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-from numpy import exp
-from numba import jit
+from typing import Optional
+from numpy import exp, ndarray
+import numpy as np
 
 
-@jit
-def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
+def ISIcalc(ffmc: ndarray, ws: ndarray, fbpMod: Optional[ndarray] = None) -> ndarray:
     """
     TODO: switch to using numpy arrays as in fwi
     Computes the Initial Spread Index From the FWI System.
@@ -32,15 +32,15 @@ def ISIcalc(ffmc: float, ws: float, fbpMod: bool = False):
     ws -- Wind Speed (km/h)
     fbpMod -- TRUE/FALSE if using the fbp modification at the extreme end
     """
+    if fbpMod is None:
+        fbpMod = np.full((len(ffmc)), False)
     # Eq. 10 - Moisture content
     fm = 147.2 * (101 - ffmc)/(59.5 + ffmc)
     # Eq. 24 - Wind Effect
     # the ifelse, also takes care of the ISI modification for the fbp functions
     # This modification is Equation 53a in FCFDG (1992)
-    if ws >= 40 and fbpMod is True:
-        fW = 12 * (1 - exp(-0.0818 * (ws - 28)))
-    else:
-        fW = exp(0.05039 * ws)
+    fW = np.where((ws >= 40) & (fbpMod == True), 12 *
+                  (1 - exp(-0.0818 * (ws - 28))), exp(0.05039 * ws))
     # Eq. 25 - Fine Fuel Moisture
     fF = 91.9 * exp(-0.1386 * fm) * (1 + (fm**5.31) / 49300000)
     # Eq. 26 - Spread Index Equation

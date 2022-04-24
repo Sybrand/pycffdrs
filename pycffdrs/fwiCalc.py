@@ -27,7 +27,7 @@ from numba import jit
 
 
 @jit
-def fwiCalc(isi: ndarray, bui: ndarray):
+def fwiCalc(isi: ndarray, bui: ndarray) -> ndarray:
     """
     TODO: add types - see CFBCalc
     Fire Weather Index Calculation. Returns a single fwi value.

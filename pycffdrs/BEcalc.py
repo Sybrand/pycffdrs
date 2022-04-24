@@ -9,11 +9,11 @@ Canadian Forest Fire Behavior Prediction System." Technical Report
 ST-X-3, Forestry Canada, Ottawa, Ontario."
 """
 from typing import Dict
-from numpy import exp, log
+from numpy import exp, log, ndarray
 import numpy as np
 
 
-def BEcalc(FUELTYPE, BUI):
+def BEcalc(FUELTYPE, BUI) -> ndarray:
     """
     Computes the Buildup Effect on Fire Spread Rate.
 
@@ -30,7 +30,7 @@ def BEcalc(FUELTYPE, BUI):
     Q = (0.9, 0.7, 0.75, 0.8, 0.8, 0.8, 0.85, 0.9, 0.8, 0.8, 0.8, 0.8, 0.75,
          0.75, 0.75, 1.0, 1.0)
 
-    fuel_type_lookup : Dict[str, int] = {}
+    fuel_type_lookup: Dict[str, int] = {}
     for count, value in enumerate(d):
         fuel_type_lookup[value] = count
 
@@ -45,7 +45,7 @@ def BEcalc(FUELTYPE, BUI):
             elif BUIo[fuel_type_index] > 0:
                 # Eq. 54 (FCFDG 1992) The Buildup Effect
                 BE = exp(50 * log(Q[fuel_type_index]) *
-                        (1 / BUI[index] - 1 / BUIo[fuel_type_index]))
+                         (1 / BUI[index] - 1 / BUIo[fuel_type_index]))
         else:
             BE = 1
         result[index] = BE
