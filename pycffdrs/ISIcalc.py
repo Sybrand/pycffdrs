@@ -17,12 +17,16 @@ Forestry Canada  Fire Danger Group (FCFDG) (1992). Development and
 Structure of the Canadian Forest Fire Behavior Prediction System."
 Technical ReportST-X-3, Forestry Canada, Ottawa, Ontario."
 """
-from typing import Optional
+from typing import Union
 from numpy import exp, ndarray
 import numpy as np
+from numba import jit
 
 
-def ISIcalc(ffmc: ndarray, ws: ndarray, fbpMod: Optional[ndarray] = None) -> ndarray:
+@jit
+def ISIcalc(ffmc: ndarray,
+            ws: ndarray,
+            fbpMod: Union[ndarray, None, bool] = False) -> ndarray:
     """
     TODO: switch to using numpy arrays as in fwi
     Computes the Initial Spread Index From the FWI System.
@@ -32,8 +36,6 @@ def ISIcalc(ffmc: ndarray, ws: ndarray, fbpMod: Optional[ndarray] = None) -> nda
     ws -- Wind Speed (km/h)
     fbpMod -- TRUE/FALSE if using the fbp modification at the extreme end
     """
-    if fbpMod is None:
-        fbpMod = np.full((len(ffmc)), False)
     # Eq. 10 - Moisture content
     fm = 147.2 * (101 - ffmc)/(59.5 + ffmc)
     # Eq. 24 - Wind Effect

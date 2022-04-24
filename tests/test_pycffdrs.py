@@ -29,7 +29,8 @@ def generic_test(filename, function, *args: str):
                 if value is None:
                     values.append(None)
                 else:
-                    values.append(np.array(record.get(key)))
+                    values.append(
+                        np.array(record.get(key)))
 
             r_result = np.array([np.float64(x) for x in record.get("result")])
             python_result = function(*values)

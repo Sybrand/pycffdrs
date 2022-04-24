@@ -93,7 +93,7 @@ class buiGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for BUIcalc, and call R. """
-        dmc = [random.uniform(-10, 610) for _ in range(array_length)]
+        dmc = [random.uniform(0, 610) for _ in range(array_length)]
         dc = [random.uniform(-10, 110) for _ in range(array_length)]
         r_result = self.cffdrs._buiCalc(FloatVector(dmc), FloatVector(dc))
         data.append({'dmc': dmc, 'dc': dc, 'result': [
