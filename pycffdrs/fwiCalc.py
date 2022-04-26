@@ -23,10 +23,8 @@ Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 import numpy as np
 from numpy import ndarray
 from numpy import exp, log
-from numba import jit
 
 
-@jit
 def fwiCalc(isi: ndarray, bui: ndarray) -> ndarray:
     """
     TODO: add types - see CFBCalc

@@ -130,8 +130,8 @@ looking more like the R code.
 
 ### Numba - http://numba.pydata.org/
 
-- Using numba to speed up calculations
-- For numba to work, we need python >=3.8,<3.10
+Considered using numba, but decided against it. It's hard to debug, takes extra effort to make work, and has python compatibility constraints. 
+
 
 ### Publishing
 

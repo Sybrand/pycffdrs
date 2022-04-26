@@ -7,6 +7,7 @@ TODO: Stop using R! We can have our tests run much faster, and simplify our gith
 consuming JSON files.
 """
 import json
+import re
 from typing import List, Dict
 import numpy as np
 from pycffdrs import __version__
@@ -34,7 +35,10 @@ def generic_test(filename, function, *args: str):
 
             r_result = np.array([np.float64(x) for x in record.get("result")])
             python_result = function(*values)
-            np.testing.assert_equal(python_result, r_result)
+            # Same to 13 decimal places? that seems more than good enough.
+            # Ideally we'd match the R output exactly, but with different versions of numpy,
+            # different versions of python - this is plenty good.
+            np.testing.assert_almost_equal(python_result, r_result, 13)
 
 
 def test_BEcalc():

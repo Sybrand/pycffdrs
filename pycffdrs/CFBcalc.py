@@ -5,10 +5,7 @@ All code is based on the R project: https://cran.r-project.org/package=cffdrs
 import numpy as np
 from numpy import ndarray
 from numpy import exp
-from numba import jit
 
-
-@jit
 def CFBcalc(FUELTYPE: ndarray,  # pylint: disable=unused-argument
             FMC: ndarray, SFC: ndarray, ROS: ndarray, CBH: ndarray,
             option: str = "CFB") -> ndarray:

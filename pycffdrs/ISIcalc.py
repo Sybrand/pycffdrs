@@ -20,10 +20,8 @@ Technical ReportST-X-3, Forestry Canada, Ottawa, Ontario."
 from typing import Union
 from numpy import exp, ndarray
 import numpy as np
-from numba import jit
 
 
-@jit
 def ISIcalc(ffmc: ndarray,
             ws: ndarray,
             fbpMod: Union[ndarray, None, bool] = False) -> ndarray:
