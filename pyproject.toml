@@ -5,7 +5,7 @@ description = ""
 authors = ["Sybrand Strauss <sybrand.strauss@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.10"
+python = ">=3.8"
 numpy = "^1.22.3"
 
 [tool.poetry.dev-dependencies]
