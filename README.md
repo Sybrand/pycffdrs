@@ -63,17 +63,18 @@ The intention is to:
 
 ## Technical notes
 
-Busy figuring out best way to get the kind of performance that R gives. Most of the functions
-aren't vector ready yet. BEcalc can take vectors - but still fuguring out how I can make
-maximul use of numpy instead of iterating myself.
+Not concerned about performance at the moment. Once compatibility with the R version has been
+established, optimizations will be considered if required/requested.
 
 ### Development environment (Ubuntu 20.04)
 
-These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment has additional requirements
-that the production environment does not require. The unit tests compare the output of the original R cffdrs components,
-and as such require R, the R library cffdrs and python library rpy2.
+These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment
+has additional requirements that the production environment does not require. The unit tests
+compare the output of the original R cffdrs components. Output is stored in json files, so R
+is not required to run unit tests. However, to generate test inputs, R, the R library
+cffdrs and python library rpy2 are required.
 
-#### Install system dependencies
+#### Install system dependencies (required only for generating test inputs)
 
 ```bash
  sudo apt-get install libgdal-dev
@@ -92,7 +93,7 @@ Add ~/.local/bin to your path - so that poetry can be found.
 
 PATH="~/.local/bin:${PATH}"
 
-#### Install R
+#### Install R (required only for generating test inputs)
 
 ```bash
 sudo apt-get install r-base
@@ -104,7 +105,7 @@ sudo apt-get install r-base
 poetry install
 ```
 
-#### Install R dependancies (used for testing)
+#### Install R dependancies (required only for generating test inputs)
 
 ```bash
 R
@@ -130,8 +131,8 @@ looking more like the R code.
 
 ### Numba - http://numba.pydata.org/
 
-Considered using numba, but decided against it. It's hard to debug, takes extra effort to make work, and has python compatibility constraints. 
-
+Considered using numba, but decided against it. It's hard to debug, takes extra effort to make
+work, and has python compatibility constraints.
 
 ### Publishing
 
@@ -146,5 +147,5 @@ poetry publish -r testpypi
 
 ## License
 
-This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2, as it's a derivative work of
+This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2+, as it's a derivative work of
 https://cran.r-project.org/web/packages/cffdrs/index.html.
