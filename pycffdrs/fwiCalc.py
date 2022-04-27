@@ -39,5 +39,11 @@ def fwiCalc(isi: ndarray, bui: ndarray) -> ndarray:
                   0.1 * isi * (1000/(25 + 108.64/exp(0.023 * bui))),
                   0.1 * isi * (0.626 * (bui**0.809) + 2))
     # Eqs. 30b, 30a
-    fwi = np.where(bb <= 1, bb, exp(2.72 * ((0.434 * log(bb))**0.647)))
+    # using np.where would read nice and clean, but gives warnings because the second condition
+    # is evaluated regardles of the truth value of the first condition.
+    # fwi = np.where((bb <= 1), bb, exp(2.72 * ((0.434 * log(bb))**0.647)))
+    mask = (bb <= 1)
+    fwi = np.empty_like(bb)
+    fwi[mask] = bb[mask]
+    fwi[~mask] = exp(2.72 * ((0.434 * log(bb[~mask]))**0.647))
     return fwi
