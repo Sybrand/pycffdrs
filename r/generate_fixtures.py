@@ -17,7 +17,7 @@ def get_random_guel_type() -> str:
 
 def bui_generator(array_length: int) -> List[float]:
     """ Build a list of random bui """
-    return [random.uniform(-10, 110) for _ in range(array_length)]
+    return [random.uniform(0, 110) for _ in range(array_length)]
 
 
 def fuel_type_generator(array_length: int) -> List[str]:
@@ -79,7 +79,7 @@ class fwiCalcGenerator(TestGenerator):
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for FWIcalc, and call R. """
         # initial spread index range is from 0 to unlimited.
-        isi = [random.uniform(-10, 110) for _ in range(array_length)]
+        isi = [random.uniform(0, 110) for _ in range(array_length)]
         # buildup index range is from 0 to inlimited.
         bui = bui_generator(array_length)
         # calculate
