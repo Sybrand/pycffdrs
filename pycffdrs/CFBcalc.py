@@ -6,6 +6,7 @@ import numpy as np
 from numpy import ndarray
 from numpy import exp
 
+
 def CFBcalc(FUELTYPE: ndarray,  # pylint: disable=unused-argument
             FMC: ndarray, SFC: ndarray, ROS: ndarray, CBH: ndarray,
             option: str = "CFB") -> ndarray:

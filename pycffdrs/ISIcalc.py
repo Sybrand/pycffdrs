@@ -39,6 +39,7 @@ def ISIcalc(ffmc: ndarray,
     # Eq. 24 - Wind Effect
     # the ifelse, also takes care of the ISI modification for the fbp functions
     # This modification is Equation 53a in FCFDG (1992)
+    # pylint: disable=singleton-comparison
     fW = np.where((ws >= 40) & (fbpMod == True), 12 *
                   (1 - exp(-0.0818 * (ws - 28))), exp(0.05039 * ws))
     # Eq. 25 - Fine Fuel Moisture

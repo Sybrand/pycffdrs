@@ -125,8 +125,42 @@ class ISIcalcGenerator(TestGenerator):
                      'result': [value for value in r_result]})
 
 
+class CFBCalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for CFBCalc, and call R. """
+        FUELTYPE = fuel_type_generator(array_length)
+        FMC = [random.uniform(0, 100) for _ in range(array_length)]
+        SFC = [random.uniform(0, 100) for _ in range(array_length)]
+        ROS = [random.uniform(0, 100) for _ in range(array_length)]
+        CBH = [random.uniform(2, 7) for _ in range(array_length)]
+
+        options = (None, "CFB", "CSI", "RSO")
+        option = options[random.randint(0, 3)]
+
+        if option is None:
+            r_result = self.cffdrs._CFBcalc(
+                StrVector(FUELTYPE),
+                FloatVector(FMC),
+                FloatVector(SFC),
+                FloatVector(ROS),
+                FloatVector(CBH))
+        else:
+            r_result = self.cffdrs._CFBcalc(
+                StrVector(FUELTYPE),
+                FloatVector(FMC),
+                FloatVector(SFC),
+                FloatVector(ROS),
+                FloatVector(CBH),
+                option)
+        data.append({'FUELTYPE': FUELTYPE, 'FMC': FMC, 'SFC': SFC, 'ROS': ROS, 'CBH': CBH,
+                     'option': option,
+                     'result': [value for value in r_result]})
+
+
 if __name__ == "__main__":
     BEcalcGenerator('../tests/BEcalc.json').generate()
     fwiCalcGenerator('../tests/fwiCalc.json').generate()
     buiGenerator('../tests/buiCalc.json').generate()
-    ISIcalcGenerator('../tests/ISICalc.json').generate()
+    ISIcalcGenerator('../tests/ISIcalc.json').generate()
+    CFBCalcGenerator('../tests/CFBcalc.json').generate()
