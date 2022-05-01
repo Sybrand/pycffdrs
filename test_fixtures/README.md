@@ -1,21 +1,37 @@
-# The idea
+# Generating test fixtures
 
-The idea is that this folder would contain a Docker image, that's configured with R. We can run
-code in this container, that will create JSON test files. From our pycffdrs project, we can then,
-without the burden of needing to worry about R, just load up JSON files to run our unit tests
-against.
+Test fixtures can be generated from the docker container in this folder. The docker
+container contains an R environment with the cffdrs package installed.
 
-## Build docker image
+**Note:** Depending on the platform your using, the output values will differ slightly.
+CFFDRS with R running on ARM64 will differ from x86_64. (Differences are very minor,
+after 13 decimal places)
+
+## Docker
+
+### Build docker image
 
 ```bash
-docker build .
-docker run --rm -t -v ./src:/src
+make build
 ```
 
-or
+### Generate the test fixtures using docker.
 
 ```bash
-docker-compose build r
+make generate
+```
+
+## Local
+
+You don't have to use docker, but it spares you having to install R and cffdrs.
+
+### Generate the test fixtures locally.
+
+*Assuming you've installed python3, poetry etc. etc.*
+
+```bash
+poetry install
+poetry run python generate_fixtures.py
 ```
 
 ## I love jupyter notebooks
