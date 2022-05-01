@@ -11,6 +11,9 @@ The intention is to:
   - because it's easier to find bugs, track changes made in the R code.
   - thus code style may not follow python conventions.
   - thus code is sometimes not as efficient (may decide to optimize in later versions).
+- consider speed later.
+  - optimization is a future goal. we want something that works first.
+  - it won't run as fast as the R, and that's ok for now.
 
 ## Roadmap
 
@@ -63,21 +66,12 @@ The intention is to:
 
 ## Technical notes
 
-Busy figuring out best way to get the kind of performance that R gives. Most of the functions
-aren't vector ready yet. BEcalc can take vectors - but still fuguring out how I can make
-maximul use of numpy instead of iterating myself.
+- Not concerned about performance at the moment. Once compatibility with the R version has been established, optimizations will be considered if required/requested.
+- Assuming that all input lists are numpy arrays.
 
 ### Development environment (Ubuntu 20.04)
 
-These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment has additional requirements
-that the production environment does not require. The unit tests compare the output of the original R cffdrs components,
-and as such require R, the R library cffdrs and python library rpy2.
-
-#### Install system dependencies
-
-```bash
- sudo apt-get install libgdal-dev
-```
+These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment has additional requirements that the production environment does not require. The unit tests compare the output of the original R cffdrs components. Output is stored in json files, so R is not required to run unit tests. However, to generate test inputs, R, the R library cffdrs and python library rpy2 are required.
 
 #### Install Python Poetry
 
@@ -92,24 +86,10 @@ Add ~/.local/bin to your path - so that poetry can be found.
 
 PATH="~/.local/bin:${PATH}"
 
-#### Install R
-
-```bash
-sudo apt-get install r-base
-```
-
 #### Install python dependancies
 
 ```bash
 poetry install
-```
-
-#### Install R dependancies (used for testing)
-
-```bash
-R
-install.packages('rgdal')
-install.packages('cffdrs')
 ```
 
 #### Run tests
@@ -121,8 +101,7 @@ pytest
 
 ### Coding conventions
 
-Matching the R code as close as possible, ignoring python conventions in favour of
-looking more like the R code.
+Matching the R code as close as possible, ignoring python conventions in favour of looking more like the R code.
 
 ### Numpy
 
@@ -130,8 +109,7 @@ looking more like the R code.
 
 ### Numba - http://numba.pydata.org/
 
-- Using numba to speed up calculations
-- For numba to work, we need python >=3.8,<3.10
+Considered using numba, but decided against it. It's hard to debug, takes extra effort to make work, and has python compatibility constraints.
 
 ### Publishing
 
@@ -146,7 +124,7 @@ poetry publish -r testpypi
 
 ## License
 
-This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2, as it's a derivative work of
+This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2+, as it's a derivative work of
 https://cran.r-project.org/web/packages/cffdrs/index.html.
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sybrand_pycffdrs&metric=alert_status)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
