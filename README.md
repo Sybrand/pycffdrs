@@ -11,6 +11,9 @@ The intention is to:
   - because it's easier to find bugs, track changes made in the R code.
   - thus code style may not follow python conventions.
   - thus code is sometimes not as efficient (may decide to optimize in later versions).
+- consider speed later.
+  - optimization is a future goal. we want something that works first.
+  - it won't run as fast as the R, and that's ok for now.
 
 ## Roadmap
 
@@ -63,22 +66,12 @@ The intention is to:
 
 ## Technical notes
 
-Not concerned about performance at the moment. Once compatibility with the R version has been
-established, optimizations will be considered if required/requested.
+- Not concerned about performance at the moment. Once compatibility with the R version has been established, optimizations will be considered if required/requested.
+- Assuming that all input lists are numpy arrays.
 
 ### Development environment (Ubuntu 20.04)
 
-These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment
-has additional requirements that the production environment does not require. The unit tests
-compare the output of the original R cffdrs components. Output is stored in json files, so R
-is not required to run unit tests. However, to generate test inputs, R, the R library
-cffdrs and python library rpy2 are required.
-
-#### Install system dependencies (required only for generating test inputs)
-
-```bash
- sudo apt-get install libgdal-dev
-```
+These instructions assume a clean Ubuntu 20.04 desktop installation. The development environment has additional requirements that the production environment does not require. The unit tests compare the output of the original R cffdrs components. Output is stored in json files, so R is not required to run unit tests. However, to generate test inputs, R, the R library cffdrs and python library rpy2 are required.
 
 #### Install Python Poetry
 
@@ -93,24 +86,10 @@ Add ~/.local/bin to your path - so that poetry can be found.
 
 PATH="~/.local/bin:${PATH}"
 
-#### Install R (required only for generating test inputs)
-
-```bash
-sudo apt-get install r-base
-```
-
 #### Install python dependancies
 
 ```bash
 poetry install
-```
-
-#### Install R dependancies (required only for generating test inputs)
-
-```bash
-R
-install.packages('rgdal')
-install.packages('cffdrs')
 ```
 
 #### Run tests
@@ -122,8 +101,7 @@ pytest
 
 ### Coding conventions
 
-Matching the R code as close as possible, ignoring python conventions in favour of
-looking more like the R code.
+Matching the R code as close as possible, ignoring python conventions in favour of looking more like the R code.
 
 ### Numpy
 
@@ -131,8 +109,7 @@ looking more like the R code.
 
 ### Numba - http://numba.pydata.org/
 
-Considered using numba, but decided against it. It's hard to debug, takes extra effort to make
-work, and has python compatibility constraints.
+Considered using numba, but decided against it. It's hard to debug, takes extra effort to make work, and has python compatibility constraints.
 
 ### Publishing
 
