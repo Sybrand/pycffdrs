@@ -1,0 +1,7 @@
+
+services:
+  r:
+    build: .
+    volumes:
+      - ./src:/usr/local/src:delegated
+      - ./../tests:/usr/local/tests:delegated
