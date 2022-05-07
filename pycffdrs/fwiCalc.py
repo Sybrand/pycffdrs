@@ -21,12 +21,11 @@ Index System. 1987. Van Wagner, C.E. Canadian Forestry Service,
 Headquarters, Ottawa. Forestry Technical Report 35. 35 p."
 """
 import numpy as np
+from numpy import ndarray
 from numpy import exp, log
-from numba import jit
 
 
-@jit
-def fwiCalc(isi, bui):
+def fwiCalc(isi: ndarray, bui: ndarray) -> ndarray:
     """
     TODO: add types - see CFBCalc
     Fire Weather Index Calculation. Returns a single fwi value.
@@ -35,10 +34,21 @@ def fwiCalc(isi, bui):
     isi -- Initial Spread Index
     bui -- Buildup Index
     """
+    # using np.where would read nice and clean, but gives warnings because the second condition
+    # is evaluated regardles of the truth value of the first condition.
+
     # Eqs. 28b, 28a, 29
-    bb = np.where(bui > 80,
-                  0.1 * isi * (1000/(25 + 108.64/exp(0.023 * bui))),
-                  0.1 * isi * (0.626 * (bui**0.809) + 2))
+    # bb = np.where(bui > 80,
+    #               0.1 * isi * (1000/(25 + 108.64/exp(0.023 * bui))),
+    #               0.1 * isi * (0.626 * (bui**0.809) + 2))
+    mask = (bui > 80)
+    bb = np.empty_like(bui)
+    bb[mask] = 0.1 * isi[mask] * (1000/(25 + 108.64/exp(0.023 * bui[mask])))
+    bb[~mask] = 0.1 * isi[~mask] * (0.626 * (bui[~mask]**0.809) + 2)
     # Eqs. 30b, 30a
-    fwi = np.where(bb <= 1, bb, exp(2.72 * ((0.434 * log(bb))**0.647)))
+    # fwi = np.where((bb <= 1), bb, exp(2.72 * ((0.434 * log(bb))**0.647)))
+    mask = (bb <= 1)
+    fwi = np.empty_like(bb)
+    fwi[mask] = bb[mask]
+    fwi[~mask] = exp(2.72 * ((0.434 * log(bb[~mask]))**0.647))
     return fwi
