@@ -55,6 +55,26 @@ def cc_generator(array_length: int) -> List[float]:
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
+def isi_generator(array_length: int) -> List[float]:
+    """ Build a list of random isi """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
+def ros_generator(array_length: int) -> List[float]:
+    """ Build a list of random ros """
+    return [random.uniform(0, 10000) for _ in range(array_length)]
+
+
+def cfb_generator(array_length: int) -> List[float]:
+    """ Build a list of random cfb """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
+def rsc_generator(array_length: int) -> List[float]:
+    """ Build a list of random rsc """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
 class TestGenerator(ABC):
     """ Abstract base class to assist in generating test data. """
 
@@ -166,7 +186,7 @@ class CFBCalcGenerator(TestGenerator):
         CBH = cbh_generator(array_length)
 
         options = (None, "CFB", "CSI", "RSO")
-        option = options[random.randint(0, 3)]
+        option = options[random.randint(0, len(options)-1)]
 
         if option is None:
             r_result = self.cffdrs._CFBcalc(
@@ -193,7 +213,7 @@ class ROScalcGenerator(TestGenerator):
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for ROScalc, and call R. """
         FUELTYPE = fuel_type_generator(array_length)
-        ISI = [random.uniform(0, 100) for _ in range(array_length)]
+        ISI = isi_generator(array_length)
         BUI = bui_generator(array_length)
         FMC = fmc_generator(array_length)
         SFC = sfc_generator(array_length)
@@ -218,11 +238,58 @@ class ROScalcGenerator(TestGenerator):
                      'result': [value for value in r_result]})
 
 
+class C6calcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for C6calc, and call R. """
+        FUELTYPE = fuel_type_generator(array_length)
+        ISI = isi_generator(array_length)
+        BUI = bui_generator(array_length)
+        FMC = fmc_generator(array_length)
+        SFC = sfc_generator(array_length)
+        CBH = cbh_generator(array_length)
+        ROS = ros_generator(array_length)
+        CFB = cfb_generator(array_length)
+        RSC = rsc_generator(array_length)
+
+        options = (None, "ROS", "CFB", "RSC", "RSI")
+        option = options[random.randint(0, len(options)-1)]
+
+        if option is None:
+            r_result = self.cffdrs._C6calc(
+                StrVector(FUELTYPE),
+                FloatVector(ISI),
+                FloatVector(BUI),
+                FloatVector(FMC),
+                FloatVector(SFC),
+                FloatVector(CBH),
+                FloatVector(ROS),
+                FloatVector(CFB),
+                FloatVector(RSC),
+            )
+        else:
+            r_result = self.cffdrs._C6calc(
+                StrVector(FUELTYPE),
+                FloatVector(ISI),
+                FloatVector(BUI),
+                FloatVector(FMC),
+                FloatVector(SFC),
+                FloatVector(CBH),
+                FloatVector(ROS),
+                FloatVector(CFB),
+                FloatVector(RSC),
+            )
+        data.append({'FUELTYPE': FUELTYPE, 'ISI': ISI, 'BUI': BUI, 'FMC': FMC, 'SFC': SFC,
+                     'CBH': CBH, 'ROS': ROS, 'CFB': CFB, 'RSC': RSC,
+                     'option': option,
+                     'result': [value for value in r_result]})
+
+
 if __name__ == "__main__":
     BEcalcGenerator('../tests/BEcalc.json').generate()
     fwiCalcGenerator('../tests/fwiCalc.json').generate()
     buiGenerator('../tests/buiCalc.json').generate()
     ISIcalcGenerator('../tests/ISIcalc.json').generate()
     CFBCalcGenerator('../tests/CFBcalc.json').generate()
-    # TODO: C6calc
     ROScalcGenerator('../tests/ROScalc.json').generate()
+    C6calcGenerator('../tests/C6calc.json').generate()

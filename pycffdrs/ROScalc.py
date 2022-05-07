@@ -4,8 +4,8 @@ All code and comments based on the R project: https://cran.r-project.org/package
 """
 from numpy import ndarray, array, exp
 import numpy as np
-from BEcalc import BEcalc
-from C6calc import C6calc
+from pycffdrs.BEcalc import BEcalc
+from pycffdrs.C6calc import C6calc
 
 
 def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: ndarray, PC: ndarray, PDF: ndarray, CC: ndarray, CBH: ndarray):
@@ -38,7 +38,7 @@ def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nd
     ROS: Rate of spread (m/min)
     """
     # Set up some data vectors
-    NoBUI = np.repeat(-1, len(ISI))
+    NoBUI = np.array([-1 for _ in range(len(ISI))])
     d = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "M1", "M2", "M3", "M4",
          "S1", "S2", "S3", "O1A", "O1B")
     a = (90, 110, 110, 110, 30, 30, 45, 30, 0, 0, 120, 100, 75, 40, 55, 190,
@@ -58,7 +58,7 @@ def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nd
 
     # Calculate RSI (set up data vectors first)
     # Eq. 26 (FCFDG 1992) - Initial Rate of Spread for Conifer and Slash types
-    RSI = np.repeat(-1, len(ISI))
+    RSI = np.array([-1 for _ in range(len(ISI))])
 
     RSI = np.where((FUELTYPE == "C1") | (FUELTYPE == "C2") | (FUELTYPE == "C3") |
                    (FUELTYPE == "C4") | (FUELTYPE == "C5") | (FUELTYPE == "C6") |
@@ -67,10 +67,11 @@ def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nd
                    a * (1 - exp(-b * ISI) ** c0),
                    RSI)
     # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M1 Mixedwood type
-    RSI = np.where((FUELTYPE == "M1"), PC/100 *
-                   ROScalc(np.repeat("C2", len(ISI)), ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH)
-                   + (100 - PC) / 100 *
-                   ROScalc(np.repeat("D1", len(ISI)), ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH),
+    c2 = np.array(["C2" for _ in range(len(ISI))])
+    d1 = np.array(["D1" for _ in range(len(ISI))])
+    where_true = PC/100 * ROScalc(c2, ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH) + (
+        100 - PC) / 100 * ROScalc(d1, ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH)
+    RSI = np.where((FUELTYPE == "M1"), where_true,
                    RSI)
     # TODO: translate the rest:
     # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M2 Mixedwood type

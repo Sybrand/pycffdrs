@@ -12,6 +12,7 @@ from pycffdrs.ISIcalc import ISIcalc
 from pycffdrs.BEcalc import BEcalc
 from pycffdrs.CFBcalc import CFBcalc
 from pycffdrs.ROScalc import ROScalc
+from pycffdrs.C6calc import C6calc
 
 
 def generic_test(filename, function, *args: str):
@@ -69,8 +70,9 @@ def test_CFBCalc():
 
 def test_C6calc():
     """ Test C6calc by comparing output from R with that of Python."""
-    # TODO: implement
-    raise "not implemented"
+    generic_test('tests/C6calc.json', C6calc, 'FUELTYPE', 'ISI', 'BUI', 'FMC', 'SFC', 'CBH',
+                 'ROS', 'CFB', 'RSC',
+                 'option')
 
 
 def test_ROScalc():

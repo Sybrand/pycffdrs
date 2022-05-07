@@ -1,7 +1,10 @@
 """
 All code and comments based on the R project: https://cran.r-project.org/package=cffdrs
 """
-from numpy import ndarray
+import numpy as np
+from numpy import ndarray, exp
+from pycffdrs.BEcalc import BEcalc
+from pycffdrs.CFBcalc import CFBcalc
 
 
 def C6calc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: ndarray, CBH: ndarray,
@@ -33,35 +36,31 @@ def C6calc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nda
       ROS, CFB, RSC or RSI depending on which option was selected
     """
     # TODO: translate this function
-  #   #Average foliar moisture effect
-  #   FMEavg <- 0.778
-  #   #Eq. 59 (FCFDG 1992) Crown flame temperature (degrees K)
-  #   tt <- 1500 - 2.75 * FMC
-  #   #Eq. 60 (FCFDG 1992) Head of ignition (kJ/kg)
-  #   H <- 460 + 25.9 * FMC
-  #   #Eq. 61 (FCFDG 1992) Average foliar moisture effect
-  #   FME <- ((1.5 - 0.00275 * FMC)**4.)/(460 + 25.9 * FMC) * 1000
-  #   #Eq. 62 (FCFDG 1992) Intermediate surface fire spread rate
-  #   RSI <- 30 * (1 - exp(-0.08 * ISI))**3.0
-  #   #Return at this point, if specified by caller
-  #   if(option=="RSI"){
-  #     return(RSI)
-  #   }
-  #   #Eq. 63 (FCFDG 1992) Surface fire spread rate (m/min)
-  #   RSS <- RSI * .BEcalc(FUELTYPE, BUI)
-  #   #Eq. 64 (FCFDG 1992) Crown fire spread rate (m/min)
-  #   RSC <- 60 * (1 - exp(-0.0497 * ISI)) * FME / FMEavg
-  #   #Return at this point, if specified by caller
-  #   if(option=="RSC"){
-  #     return(RSC)
-  #   }
-  #   #Crown Fraction Burned
-  #   CFB    <- ifelse(RSC > RSS,.CFBcalc(FUELTYPE, FMC, SFC, RSS, CBH),0)
-  #   #Return at this point, if specified by caller
-  #   if(option=="CFB"){
-  #     return(CFB)
-  #   }
-  #   #Eq. 65 (FCFDG 1992) Calculate Rate of spread (m/min)
-  #   ROS    <- ifelse(RSC > RSS,RSS + (CFB)*(RSC-RSS),RSS)
-  #   return(ROS)
-  # }
+    # Average foliar moisture effect
+    FMEavg = 0.778
+    # Eq. 59 (FCFDG 1992) Crown flame temperature (degrees K)
+    # tt = 1500 - 2.75 * FMC
+    # Eq. 60 (FCFDG 1992) Head of ignition (kJ/kg)
+    # H = 460 + 25.9 * FMC
+    # Eq. 61 (FCFDG 1992) Average foliar moisture effect
+    FME = ((1.5 - 0.00275 * FMC)**4.0)/(460 + 25.9 * FMC) * 1000
+    # Eq. 62 (FCFDG 1992) Intermediate surface fire spread rate
+    RSI = 30 * (1 - exp(-0.08 * ISI))**3.0
+    # Return at this point, if specified by caller
+    if(option == "RSI"):
+        return RSI
+    # Eq. 63 (FCFDG 1992) Surface fire spread rate (m/min)
+    RSS = RSI * BEcalc(FUELTYPE, BUI)
+    # Eq. 64 (FCFDG 1992) Crown fire spread rate (m/min)
+    RSC = 60 * (1 - exp(-0.0497 * ISI)) * FME / FMEavg
+    # Return at this point, if specified by caller
+    if(option == "RSC"):
+        return RSC
+    # Crown Fraction Burned
+    CFB = np.where(RSC > RSS, CFBcalc(FUELTYPE, FMC, SFC, RSS, CBH), 0)
+    # Return at this point, if specified by caller
+    if (option == "CFB"):
+        return CFB
+    # Eq. 65 (FCFDG 1992) Calculate Rate of spread (m/min)
+    ROS = np.where(RSC > RSS, RSS + (CFB)*(RSC-RSS), RSS)
+    return ROS
