@@ -4,8 +4,8 @@ All code and comments based on the R project: https://cran.r-project.org/package
 """
 from numpy import ndarray, array, exp
 import numpy as np
-import BEcalc
-import C6Calc
+from BEcalc import BEcalc
+from C6calc import C6calc
 
 
 def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: ndarray, PC: ndarray, PDF: ndarray, CC: ndarray, CBH: ndarray):
@@ -38,7 +38,6 @@ def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nd
     ROS: Rate of spread (m/min)
     """
     # Set up some data vectors
-    # NoBUI <- rep(-1,length(ISI))
     NoBUI = np.repeat(-1, len(ISI))
     d = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "M1", "M2", "M3", "M4",
          "S1", "S2", "S3", "O1A", "O1B")
@@ -73,6 +72,7 @@ def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nd
                    + (100 - PC) / 100 *
                    ROScalc(np.repeat("D1", len(ISI)), ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH),
                    RSI)
+    # TODO: translate the rest:
     # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M2 Mixedwood type
     # RSI <- ifelse(FUELTYPE %in% c("M2"),
     #         PC/100 *

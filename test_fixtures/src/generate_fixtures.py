@@ -224,4 +224,5 @@ if __name__ == "__main__":
     buiGenerator('../tests/buiCalc.json').generate()
     ISIcalcGenerator('../tests/ISIcalc.json').generate()
     CFBCalcGenerator('../tests/CFBcalc.json').generate()
+    # TODO: C6calc
     ROScalcGenerator('../tests/ROScalc.json').generate()

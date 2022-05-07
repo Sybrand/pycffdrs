@@ -67,6 +67,12 @@ def test_CFBCalc():
     generic_test('tests/CFBcalc.json', CFBcalc, 'FUELTYPE', 'FMC', 'SFC', 'ROS', 'CBH', 'option')
 
 
+def test_C6calc():
+    """ Test C6calc by comparing output from R with that of Python."""
+    # TODO: implement
+    raise "not implemented"
+
+
 def test_ROScalc():
     """ Test ROScalc by comparing output from R with that of Python.
     """
