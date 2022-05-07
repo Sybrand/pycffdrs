@@ -80,8 +80,8 @@ class TestGenerator(ABC):
 
     def __init__(self, filename: str):
         """ Constructor. """
-        # Number of iterations to generate. Each iteration is a list of inputs, which matches to a function
-        # call to the R function being tests.
+        # Number of iterations to generate. Each iteration is a list of inputs, which matches to a
+        # function call to the R function being tests.
         self.iterations = 25
         # Connect to R.
         self.cffdrs = importr('cffdrs')
@@ -101,7 +101,8 @@ class TestGenerator(ABC):
 
     @abstractmethod
     def create_record(self, data: List[Dict[str, List]], array_length: int):
-        """ Abstract method. Implement code that creates input data, calls R, and stores inputs + results. """
+        """ Abstract method. Implement code that creates input data, calls R, and stores inputs +
+        results. """
         pass
 
     def write_data(self, data: List):
@@ -120,7 +121,7 @@ class BEcalcGenerator(TestGenerator):
         # calculate
         r_result = self.cffdrs._BEcalc(StrVector(FUELTYPE), FloatVector(BUI))
         # add to data
-        data.append({'FUELTYPE': FUELTYPE, 'BUI': BUI,
+        data.append({'input': {'FUELTYPE': FUELTYPE, 'BUI': BUI},
                     'result': [value for value in r_result]})
 
 
@@ -135,7 +136,7 @@ class fwiCalcGenerator(TestGenerator):
         # calculate
         r_result = self.cffdrs._fwiCalc(FloatVector(isi), FloatVector(bui))
         # add to data
-        data.append({'isi': isi, 'bui': bui, 'result': [
+        data.append({'input': {'isi': isi, 'bui': bui}, 'result': [
                     value for value in r_result]})
 
 
@@ -146,7 +147,7 @@ class buiGenerator(TestGenerator):
         dmc = [random.uniform(0, 610) for _ in range(array_length)]
         dc = [random.uniform(-10, 110) for _ in range(array_length)]
         r_result = self.cffdrs._buiCalc(FloatVector(dmc), FloatVector(dc))
-        data.append({'dmc': dmc, 'dc': dc, 'result': [
+        data.append({'input': {'dmc': dmc, 'dc': dc}, 'result': [
                     value for value in r_result]})
 
 
@@ -171,7 +172,7 @@ class ISIcalcGenerator(TestGenerator):
                 FloatVector(ws),
                 BoolVector(fbpMod))
         # robjs.r("NULL") if fbpMod is None else BoolVector(fbpMod))
-        data.append({'ffmc': ffmc, 'ws': ws, 'fbpMod': fbpMod,
+        data.append({'input': {'ffmc': ffmc, 'ws': ws, 'fbpMod': fbpMod},
                      'result': [value for value in r_result]})
 
 
@@ -203,9 +204,14 @@ class CFBCalcGenerator(TestGenerator):
                 FloatVector(ROS),
                 FloatVector(CBH),
                 option)
-        data.append({'FUELTYPE': FUELTYPE, 'FMC': FMC, 'SFC': SFC, 'ROS': ROS, 'CBH': CBH,
-                     'option': option,
-                     'result': [value for value in r_result]})
+        data.append(
+            {
+                'input':
+                {
+                    'FUELTYPE': FUELTYPE, 'FMC': FMC, 'SFC': SFC, 'ROS': ROS, 'CBH': CBH,
+                    'option': option
+                },
+                'result': [value for value in r_result]})
 
 
 class ROScalcGenerator(TestGenerator):
@@ -233,8 +239,11 @@ class ROScalcGenerator(TestGenerator):
             FloatVector(CC),
             FloatVector(CBH))
 
-        data.append({'FUELTYPE': FUELTYPE, 'ISI': ISI, 'BUI': BUI, 'FMC': FMC, 'SFC': SFC, 'PC': PC,
-                     'PDF': PDF, 'CC': CC, 'CBH': CBH,
+        data.append({'input':
+                     {
+                         'FUELTYPE': FUELTYPE, 'ISI': ISI, 'BUI': BUI, 'FMC': FMC, 'SFC': SFC,
+                         'PC': PC, 'PDF': PDF, 'CC': CC, 'CBH': CBH
+                     },
                      'result': [value for value in r_result]})
 
 
@@ -278,10 +287,14 @@ class C6calcGenerator(TestGenerator):
                 FloatVector(ROS),
                 FloatVector(CFB),
                 FloatVector(RSC),
+                option
             )
-        data.append({'FUELTYPE': FUELTYPE, 'ISI': ISI, 'BUI': BUI, 'FMC': FMC, 'SFC': SFC,
-                     'CBH': CBH, 'ROS': ROS, 'CFB': CFB, 'RSC': RSC,
-                     'option': option,
+        data.append({'input':
+                     {
+                         'FUELTYPE': FUELTYPE, 'ISI': ISI, 'BUI': BUI, 'FMC': FMC, 'SFC': SFC,
+                         'CBH': CBH, 'ROS': ROS, 'CFB': CFB, 'RSC': RSC,
+                         'option': option
+                     },
                      'result': [value for value in r_result]})
 
 

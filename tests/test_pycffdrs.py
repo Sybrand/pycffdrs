@@ -15,20 +15,16 @@ from pycffdrs.ROScalc import ROScalc
 from pycffdrs.C6calc import C6calc
 
 
-def generic_test(filename, function, *args: str):
+def generic_test(filename, function):
     """ Generic test function. Given a filename, a function to test, and the names of arguments
     """
     with open(filename, 'rb') as f:
         data: List[Dict[str, List]] = json.load(f)
         for record in data:
             values = []
-            for key in args:
-                value = record.get(key)
-                if value is None:
-                    values.append(None)
-                else:
-                    values.append(
-                        np.array(record.get(key)))
+            for value in record.get("input").values():
+                if not value is None:
+                    values.append(np.array(value))
 
             r_result = np.array([np.float64(x) for x in record.get("result")])
             python_result = function(*values)
@@ -41,42 +37,39 @@ def generic_test(filename, function, *args: str):
 def test_BEcalc():
     """ Test BEcalc by comparing output from R with that of Python.
     """
-    generic_test('tests/BEcalc.json', BEcalc, 'FUELTYPE', 'BUI')
+    generic_test('tests/BEcalc.json', BEcalc)
 
 
 def test_fwiCalc():
     """ Test fwiCalc by comparing output from R with that of Python.
     """
-    generic_test('tests/fwiCalc.json', fwiCalc, 'isi', 'bui')
+    generic_test('tests/fwiCalc.json', fwiCalc)
 
 
 def test_buiCalc():
     """ Test buiCalc by comparing output from R with that of Python.
     """
-    generic_test('tests/buiCalc.json', buiCalc, 'dmc', 'dc')
+    generic_test('tests/buiCalc.json', buiCalc)
 
 
 def test_ISIcalc():
     """ Test ISIcalc by comparing output from R with that of Python.
     """
-    generic_test('tests/ISIcalc.json', ISIcalc, 'ffmc', 'ws', 'fbpMod')
+    generic_test('tests/ISIcalc.json', ISIcalc)
 
 
 def test_CFBCalc():
     """ Test CFBcalc by comparing output from R with that of Python.
     """
-    generic_test('tests/CFBcalc.json', CFBcalc, 'FUELTYPE', 'FMC', 'SFC', 'ROS', 'CBH', 'option')
+    generic_test('tests/CFBcalc.json', CFBcalc)
 
 
 def test_C6calc():
     """ Test C6calc by comparing output from R with that of Python."""
-    generic_test('tests/C6calc.json', C6calc, 'FUELTYPE', 'ISI', 'BUI', 'FMC', 'SFC', 'CBH',
-                 'ROS', 'CFB', 'RSC',
-                 'option')
+    generic_test('tests/C6calc.json', C6calc)
 
 
 def test_ROScalc():
     """ Test ROScalc by comparing output from R with that of Python.
     """
-    generic_test('tests/ROScalc.json', ROScalc, 'FUELTYPE', 'ISI',
-                 'BUI', 'FMC', 'SFC', 'PC', 'PDF', 'CC', 'CBH')
+    generic_test('tests/ROScalc.json', ROScalc)
