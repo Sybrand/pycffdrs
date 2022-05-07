@@ -11,6 +11,7 @@ from pycffdrs.buiCalc import buiCalc
 from pycffdrs.ISIcalc import ISIcalc
 from pycffdrs.BEcalc import BEcalc
 from pycffdrs.CFBcalc import CFBcalc
+from pycffdrs.ROScalc import ROScalc
 
 
 def generic_test(filename, function, *args: str):
@@ -64,3 +65,10 @@ def test_CFBCalc():
     """ Test CFBcalc by comparing output from R with that of Python.
     """
     generic_test('tests/CFBcalc.json', CFBcalc, 'FUELTYPE', 'FMC', 'SFC', 'ROS', 'CBH', 'option')
+
+
+def test_ROScalc():
+    """ Test ROScalc by comparing output from R with that of Python.
+    """
+    generic_test('tests/ROScalc.json', ROScalc, 'FUELTYPE', 'ISI',
+                 'BUI', 'FMC', 'SFC', 'PC', 'PDF', 'CC', 'CBH')
