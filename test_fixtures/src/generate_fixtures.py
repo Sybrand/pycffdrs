@@ -7,7 +7,7 @@ from rpy2.robjects.vectors import FloatVector, StrVector, BoolVector
 import rpy2.robjects as robjs
 
 
-def get_random_guel_type() -> str:
+def get_random_fuel_type() -> str:
     """ Get a random fuel type """
     # We include a garbage fuel type.
     fuel_types = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1",
@@ -27,7 +27,7 @@ def bui_generator(array_length: int) -> List[float]:
 
 def fuel_type_generator(array_length: int) -> List[str]:
     """ Build a list of random fuel types """
-    return [get_random_guel_type() for _ in range(array_length)]
+    return [get_random_fuel_type() for _ in range(array_length)]
 
 
 def fmc_generator(array_length: int) -> List[float]:
@@ -80,8 +80,33 @@ def rsc_generator(array_length: int) -> List[float]:
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
+def hr_generator(array_length: int) -> List[float]:
+    """ Build a list of random hr """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
 def wsv_generator(array_length: int) -> List[float]:
     """ Build a list of random wind speed vectors """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
+def temp_generator(array_length: int) -> List[float]:
+    """ Build a list of random temperatures """
+    return [random.uniform(-50, 50) for _ in range(array_length)]
+
+
+def rh_generator(array_length: int) -> List[float]:
+    """ Build a list of random relative humidities """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
+def ws_generator(array_length: int) -> List[float]:
+    """ Build a list of random wind speeds """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
+def prec_generator(array_length: int) -> List[float]:
+    """ Build a list of random precipitations """
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
@@ -308,6 +333,26 @@ class C6calcGenerator(TestGenerator):
                      'result': [value for value in r_result]})
 
 
+class DISTtcalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for DISTtcalc, and call R. """
+        FUELTYPE = fuel_type_generator(array_length)
+        ROSeq = ros_generator(array_length)
+        HR = hr_generator(array_length)
+        CFB = cfb_generator(array_length)
+
+        r_result = self.cffdrs._DISTtcalc(
+            StrVector(FUELTYPE),
+            FloatVector(ROSeq),
+            FloatVector(HR),
+            FloatVector(CFB))
+
+        data.append({'input': {
+            'FUELTYPE': FUELTYPE, 'ROSeq': ROSeq, 'HR': HR, 'CFB': CFB},
+            'result': [value for value in r_result]})
+
+
 class BROScalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
@@ -341,12 +386,36 @@ class BROScalcGenerator(TestGenerator):
         }, 'result': [value for value in r_result]})
 
 
+class ffmcCalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for ffmcCalc, and call R. """
+        ffmc_yda = ffmc_generator(array_length)
+        temp = temp_generator(array_length)
+        rh = rh_generator(array_length)
+        ws = ws_generator(array_length)
+        prec = prec_generator(array_length)
+
+        r_result = self.cffdrs._ffmcCalc(
+            FloatVector(ffmc_yda),
+            FloatVector(temp),
+            FloatVector(rh),
+            FloatVector(ws),
+            FloatVector(prec))
+
+        data.append({'input': {
+            'ffmc_yda': ffmc_yda, 'temp': temp, 'rh': rh, 'ws': ws, 'prec': prec},
+            'result': [value for value in r_result]})
+
+
 if __name__ == "__main__":
-    # BEcalcGenerator('../tests/BEcalc.json').generate()
-    # fwiCalcGenerator('../tests/fwiCalc.json').generate()
-    # buiGenerator('../tests/buiCalc.json').generate()
-    # ISIcalcGenerator('../tests/ISIcalc.json').generate()
-    # CFBCalcGenerator('../tests/CFBcalc.json').generate()
-    # ROScalcGenerator('../tests/ROScalc.json').generate()
-    # C6calcGenerator('../tests/C6calc.json').generate()
+    BEcalcGenerator('../tests/BEcalc.json').generate()
+    fwiCalcGenerator('../tests/fwiCalc.json').generate()
+    buiGenerator('../tests/buiCalc.json').generate()
+    ISIcalcGenerator('../tests/ISIcalc.json').generate()
+    CFBCalcGenerator('../tests/CFBcalc.json').generate()
+    ROScalcGenerator('../tests/ROScalc.json').generate()
+    C6calcGenerator('../tests/C6calc.json').generate()
     BROScalcGenerator('../tests/BROScalc.json').generate()
+    DISTtcalcGenerator('../tests/DISTtcalc.json').generate()
+    ffmcCalcGenerator('../tests/ffmcCalc.json').generate()
