@@ -15,6 +15,11 @@ def get_random_guel_type() -> str:
     return fuel_types[random.randint(0, len(fuel_types)-1)]
 
 
+def ffmc_generator(array_length: int) -> List[float]:
+    """  Build a list of random ffmc """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
 def bui_generator(array_length: int) -> List[float]:
     """ Build a list of random bui """
     return [random.uniform(0, 110) for _ in range(array_length)]
@@ -72,6 +77,11 @@ def cfb_generator(array_length: int) -> List[float]:
 
 def rsc_generator(array_length: int) -> List[float]:
     """ Build a list of random rsc """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
+def wsv_generator(array_length: int) -> List[float]:
+    """ Build a list of random wind speed vectors """
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
@@ -155,7 +165,7 @@ class ISIcalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for ISICalc, and call R. """
-        ffmc = [random.uniform(0, 100) for _ in range(array_length)]
+        ffmc = ffmc_generator(array_length)
         ws = [random.uniform(0, 100) for _ in range(array_length)]
         if random.randint(0, 1) == 0:
             fbpMod = None
@@ -298,11 +308,45 @@ class C6calcGenerator(TestGenerator):
                      'result': [value for value in r_result]})
 
 
+class BROScalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for BROScalc, and call R. """
+        FUELTYPE = fuel_type_generator(array_length)
+        FFMC = ffmc_generator(array_length)
+        BUI = bui_generator(array_length)
+        WSV = wsv_generator(array_length)
+        FMC = fmc_generator(array_length)
+        SFC = sfc_generator(array_length)
+        PC = pc_generator(array_length)
+        PDF = pdf_generator(array_length)
+        CC = cc_generator(array_length)
+        CBH = cbh_generator(array_length)
+
+        r_result = self.cffdrs._BROScalc(
+            StrVector(FUELTYPE),
+            FloatVector(FFMC),
+            FloatVector(BUI),
+            FloatVector(WSV),
+            FloatVector(FMC),
+            FloatVector(SFC),
+            FloatVector(PC),
+            FloatVector(PDF),
+            FloatVector(CC),
+            FloatVector(CBH))
+
+        data.append({'input': {
+            'FUELTYPE': FUELTYPE, 'FFMC': FFMC, 'BUI': BUI, 'WSV': WSV, 'FMC': FMC, 'SFC': SFC,
+            'PC': PC, 'PDF': PDF, 'CC': CC, 'CBH': CBH
+        }, 'result': [value for value in r_result]})
+
+
 if __name__ == "__main__":
-    BEcalcGenerator('../tests/BEcalc.json').generate()
-    fwiCalcGenerator('../tests/fwiCalc.json').generate()
-    buiGenerator('../tests/buiCalc.json').generate()
-    ISIcalcGenerator('../tests/ISIcalc.json').generate()
-    CFBCalcGenerator('../tests/CFBcalc.json').generate()
-    ROScalcGenerator('../tests/ROScalc.json').generate()
-    C6calcGenerator('../tests/C6calc.json').generate()
+    # BEcalcGenerator('../tests/BEcalc.json').generate()
+    # fwiCalcGenerator('../tests/fwiCalc.json').generate()
+    # buiGenerator('../tests/buiCalc.json').generate()
+    # ISIcalcGenerator('../tests/ISIcalc.json').generate()
+    # CFBCalcGenerator('../tests/CFBcalc.json').generate()
+    # ROScalcGenerator('../tests/ROScalc.json').generate()
+    # C6calcGenerator('../tests/C6calc.json').generate()
+    BROScalcGenerator('../tests/BROScalc.json').generate()

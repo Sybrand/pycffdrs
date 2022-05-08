@@ -1,4 +1,3 @@
-
 """
 Test pycffdrs by comparing it to output from the R cffdrs package.
 """
@@ -13,6 +12,7 @@ from pycffdrs.BEcalc import BEcalc
 from pycffdrs.CFBcalc import CFBcalc
 from pycffdrs.ROScalc import ROScalc
 from pycffdrs.C6calc import C6calc
+from pycffdrs.BROScalc import BROScalc
 
 
 def generic_test(filename, function):
@@ -73,3 +73,8 @@ def test_ROScalc():
     """ Test ROScalc by comparing output from R with that of Python.
     """
     generic_test('tests/ROScalc.json', ROScalc)
+
+
+def test_BROScalc():
+    """ Test BROScalc by comparing output from R with that of Python. """
+    generic_test('tests/BROScalc.json', BROScalc)
