@@ -2,13 +2,86 @@
 All code and comments based on the R project: https://cran.r-project.org/package=cffdrs
 
 """
-from numpy import ndarray, array, exp
+from numpy import ndarray, exp
 import numpy as np
 from pycffdrs.BEcalc import BEcalc
 from pycffdrs.C6calc import C6calc
 
 
-def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: ndarray, PC: ndarray, PDF: ndarray, CC: ndarray, CBH: ndarray):
+d = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "M1", "M2", "M3", "M4",
+     "S1", "S2", "S3", "O1A", "O1B")
+a = dict(zip(d, (90, 110, 110, 110, 30, 30, 45, 30, 0, 0, 120, 100, 75, 40, 55, 190,
+                 250)))
+b = dict(zip(d, (0.0649, 0.0282, 0.0444, 0.0293, 0.0697, 0.0800, 0.0305, 0.0232, 0, 0,
+                 0.0572, 0.0404, 0.0297, 0.0438, 0.0829, 0.0310, 0.0350)))
+c0 = dict(zip(d, (4.5, 1.5, 3.0, 1.5, 4.0, 3.0, 2.0, 1.6, 0, 0, 1.4, 1.48, 1.3, 1.7,
+                  3.2, 1.4, 1.7)))
+
+
+def _ROScalc(FUELTYPE: str,  # pylint: disable=too-many-arguments
+             ISI: float,
+             BUI: float,
+             FMC: float,
+             SFC: float,
+             PC: float,
+             PDF: float,
+             CC: float,
+             CBH: float) -> float:
+    """ Compute ROS with scalar input values. Nesting makes working with vectors extremely
+    difficult. """
+    NoBUI = -1
+    RSI = -1
+    # Eq. 26 (FCFDG 1992) - Initial Rate of Spread for Conifer and Slash types
+    if FUELTYPE in ("C1", "C2", "C3", "C4", "C5", "C7", "D1", "S1", "S2", "S3"):
+        RSI = a[FUELTYPE] * (1 - exp(-b[FUELTYPE] * ISI))**c0[FUELTYPE]
+    # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M1 Mixedwood type
+    elif FUELTYPE == 'M1':
+        RSI = PC/100 * _ROScalc("C2", ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH) + \
+            (100 - PC) / 100 * _ROScalc("D1", ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH)
+    # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M2 Mixedwood type
+    elif FUELTYPE == 'M2':
+        RSI = PC/100 * _ROScalc("C2", ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH) + \
+            0.2*(100-PC)/100 * _ROScalc("D1", ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH)
+    elif FUELTYPE == 'M3':
+        # Initial Rate of Spread for M3 Mixedwood
+        # Eq. 30 (Wotton et. al 2009)
+        RSI_m3 = a["M3"] * ((1 - exp(-b["M3"] * ISI))**c0["M3"])
+        RSI = PDF/100 * RSI_m3 + (1-PDF/100) * _ROScalc("D1", ISI,
+                                                        NoBUI, FMC, SFC, PC, PDF, CC, CBH)
+    elif FUELTYPE == 'M4':
+        # Initial Rate of Spread for M4 Mixedwood
+        # Eq. 30 (Wotton et. al 2009)
+        RSI_m4 = a["M4"] * ((1 - exp(-b["M4"] * ISI))**c0["M4"])
+        # Eq. 33 (Wotton et. al 2009)
+        RSI = PDF / 100 * RSI_m4 + 0.2 * (1 - PDF / 100) * \
+            _ROScalc("D1", ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH)
+        # Eq. 35b (Wotton et. al. 2009) - Calculate Curing function for grass
+    elif FUELTYPE in ('O1A', 'O1B'):
+        if CC < 58.8:
+            CF = 0.005 * (exp(0.061 * CC) - 1)
+        else:
+            CF = 0.176 + 0.02 * (CC - 58.8)
+        # Eq. 36 (FCFDG 1992) - Calculate Initial Rate of Spread for Grass
+        RSI = a[FUELTYPE] * ((1 - exp(-b[FUELTYPE] * ISI))**c0[FUELTYPE]) * CF
+    if FUELTYPE == 'C6':
+        ROS = C6calc(np.array((FUELTYPE,)), np.array((ISI,)), np.array((BUI,)),
+                     np.array((FMC,)), np.array((SFC,)), np.array((CBH,)), option="ROS")
+    else:
+        ROS = BEcalc(np.array((FUELTYPE,)), np.array((BUI,))) * RSI
+    if ROS < 0:
+        return 0.000001
+    return ROS
+
+
+def ROScalc(FUELTYPE: ndarray,  # pylint: disable=too-many-arguments, too-many-locals
+            ISI: ndarray,
+            BUI: ndarray,
+            FMC: ndarray,
+            SFC: ndarray,
+            PC: ndarray,
+            PDF: ndarray,
+            CC: ndarray,
+            CBH: ndarray):
     """
     Computes the Rate of Spread prediction based on fuel type and FWI
     conditions. Equations are from listed FCFDG (1992) and Wotton et. al.
@@ -37,91 +110,9 @@ def ROScalc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nd
     Returns:
     ROS: Rate of spread (m/min)
     """
-    # Set up some data vectors
-    NoBUI = np.array([-1 for _ in range(len(ISI))])
-    d = ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "M1", "M2", "M3", "M4",
-         "S1", "S2", "S3", "O1A", "O1B")
-    a = (90, 110, 110, 110, 30, 30, 45, 30, 0, 0, 120, 100, 75, 40, 55, 190,
-         250)
-    b = (0.0649, 0.0282, 0.0444, 0.0293, 0.0697, 0.0800, 0.0305, 0.0232, 0, 0,
-         0.0572, 0.0404, 0.0297, 0.0438, 0.0829, 0.0310, 0.0350)
-    c0 = (4.5, 1.5, 3.0, 1.5, 4.0, 3.0, 2.0, 1.6, 0, 0, 1.4, 1.48, 1.3, 1.7,
-          3.2, 1.4, 1.7)
-
-    a = dict(zip(d, a))
-    b = dict(zip(d, b))
-    c0 = dict(zip(d, c0))
-
-    a = array([a[key] for key in FUELTYPE])
-    b = array([b[key] for key in FUELTYPE])
-    c0 = array([c0[key] for key in FUELTYPE])
-
-    # Calculate RSI (set up data vectors first)
-    # Eq. 26 (FCFDG 1992) - Initial Rate of Spread for Conifer and Slash types
-    RSI = np.array([-1 for _ in range(len(ISI))])
-
-    RSI = np.where((FUELTYPE == "C1") | (FUELTYPE == "C2") | (FUELTYPE == "C3") |
-                   (FUELTYPE == "C4") | (FUELTYPE == "C5") | (FUELTYPE == "C6") |
-                   (FUELTYPE == "C7") | (FUELTYPE == "D1") | (FUELTYPE == "S1") |
-                   (FUELTYPE == "S2") | (FUELTYPE == "S3"),
-                   a * (1 - exp(-b * ISI) ** c0),
-                   RSI)
-    # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M1 Mixedwood type
-    c2 = np.array(["C2" for _ in range(len(ISI))])
-    d1 = np.array(["D1" for _ in range(len(ISI))])
-    where_true = PC/100 * ROScalc(c2, ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH) + (
-        100 - PC) / 100 * ROScalc(d1, ISI, NoBUI, FMC, SFC, PC, PDF, CC, CBH)
-    RSI = np.where((FUELTYPE == "M1"), where_true,
-                   RSI)
-    # TODO: translate the rest:
-    # Eq. 27 (FCFDG 1992) - Initial Rate of Spread for M2 Mixedwood type
-    # RSI <- ifelse(FUELTYPE %in% c("M2"),
-    #         PC/100 *
-    #         .ROScalc(rep("C2", length(ISI)),ISI,NoBUI,FMC,SFC,PC,PDF,CC,CBH)
-    #         + 0.2*(100-PC)/100 *
-    #         .ROScalc(rep("D1", length(ISI)),ISI,NoBUI,FMC,SFC,PC,PDF,CC, CBH),
-    #         RSI)
-    # #Initial Rate of Spread for M3 Mixedwood
-    # RSI_m3 <- rep(-99,length(ISI))
-    # #Eq. 30 (Wotton et. al 2009)
-    # RSI_m3 <-
-    # ifelse(FUELTYPE %in% c("M3"),
-    # as.numeric(a[["M3"]] * ((1 - exp(-b[["M3"]] * ISI))**c0[["M3"]])), RSI_m3)
-    # #Eq. 29 (Wotton et. al 2009)
-    # RSI <-
-    # ifelse(FUELTYPE %in% c("M3"),
-    # PDF/100* RSI_m3 + (1-PDF/100) *
-    #         .ROScalc(rep("D1", length(ISI)), ISI, NoBUI, FMC, SFC, PC, PDF, CC,CBH),
-    # RSI)
-    # #Initial Rate of Spread for M4 Mixedwood
-    # RSI_m4 <- rep(-99,length(ISI))
-    # #Eq. 30 (Wotton et. al 2009)
-    # RSI_m4 <-
-    # ifelse(FUELTYPE %in% c("M4"),
-    # as.numeric(a[["M4"]] * ((1 - exp(-b[["M4"]] * ISI))**c0[["M4"]])), RSI_m4)
-    # #Eq. 33 (Wotton et. al 2009)
-    # RSI <-
-    # ifelse(FUELTYPE %in% c("M4"),
-    # PDF / 100* RSI_m4 + 0.2 * (1 - PDF / 100)*
-    #         .ROScalc(rep("D1", length(ISI)), ISI, NoBUI, FMC, SFC, PC, PDF, CC,CBH),
-    # RSI)
-    # #Eq. 35b (Wotton et. al. 2009) - Calculate Curing function for grass
-    # CF <- rep(-99,length(ISI))
-    # CF <-
-    # ifelse(FUELTYPE %in% c("O1A", "O1B"),
-    #         ifelse(CC < 58.8,
-    #                 0.005 * (exp(0.061 * CC) - 1),
-    #                 0.176 + 0.02 * (CC - 58.8)),
-    #         CF)
-    # #Eq. 36 (FCFDG 1992) - Calculate Initial Rate of Spread for Grass
-    # RSI <-
-    # ifelse(FUELTYPE %in% c("O1A", "O1B"),
-    # a[FUELTYPE] * ((1 - exp(-b[FUELTYPE] * ISI))**c0[FUELTYPE]) * CF,
-    # RSI)
-    # Calculate C6 separately
-    ROS = np.where((FUELTYPE == "C6"),
-                   C6calc(FUELTYPE, ISI, BUI, FMC, SFC, CBH, option="ROS"),
-                   BEcalc(FUELTYPE, BUI) * RSI)
-    # add a constraint
-    ROS = np.where(ROS <= 0, 0.000001, ROS)
-    return ROS
+    result = np.empty(len(FUELTYPE))
+    for i, (
+            _FUELTYPE, _ISI, _BUI, _FMC, _SFC, _PC, _PDF, _CC, _CBH) in enumerate(
+                zip(FUELTYPE, ISI, BUI, FMC, SFC, PC, PDF, CC, CBH)):
+        result[i] = _ROScalc(_FUELTYPE, _ISI, _BUI, _FMC, _SFC, _PC, _PDF, _CC, _CBH)
+    return result

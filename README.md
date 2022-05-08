@@ -34,13 +34,13 @@ The intention is to:
 - [ ] ISIcalc
 - [ ] LBcalc
 - [ ] LBtcalc
-- [ ] BUSY WITH THIS ONE ON THIS PR: ROScalc
+- [x] ROScalc
 - [ ] ROStcalc
 - [ ] SFCcalc
 - [ ] Slopecalc
 - [ ] TFCcalc
 - [x] BEcalc
-- [ ] BUSY WITH THIS ONE ON THIS PR: C6calc
+- [x] C6calc
 - [x] fwiCalc
 
 ### 2nd release

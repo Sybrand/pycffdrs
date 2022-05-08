@@ -7,8 +7,17 @@ from pycffdrs.BEcalc import BEcalc
 from pycffdrs.CFBcalc import CFBcalc
 
 
-def C6calc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: ndarray, CBH: ndarray,
-           ROS: ndarray, CFB: ndarray,  RSC: ndarray, option: str = "CFB"):
+def C6calc(  # pylint: disable=too-many-arguments
+        FUELTYPE: ndarray,
+        ISI: ndarray,
+        BUI: ndarray,
+        FMC: ndarray,
+        SFC: ndarray,
+        CBH: ndarray,
+        ROS: ndarray = None,
+        CFB: ndarray = None,
+        RSC: ndarray = None,
+        option: str = "CFB"):
     """
       Calculate c6 (Conifer plantation) Fire Spread. C6 is a special case, and
         thus has it's own function. To calculate C6 fire spread, this function
@@ -35,7 +44,6 @@ def C6calc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nda
     Returns:
       ROS, CFB, RSC or RSI depending on which option was selected
     """
-    # TODO: translate this function
     # Average foliar moisture effect
     FMEavg = 0.778
     # Eq. 59 (FCFDG 1992) Crown flame temperature (degrees K)
@@ -47,19 +55,19 @@ def C6calc(FUELTYPE: ndarray, ISI: ndarray, BUI: ndarray, FMC: ndarray, SFC: nda
     # Eq. 62 (FCFDG 1992) Intermediate surface fire spread rate
     RSI = 30 * (1 - exp(-0.08 * ISI))**3.0
     # Return at this point, if specified by caller
-    if(option == "RSI"):
+    if option == "RSI":
         return RSI
     # Eq. 63 (FCFDG 1992) Surface fire spread rate (m/min)
     RSS = RSI * BEcalc(FUELTYPE, BUI)
     # Eq. 64 (FCFDG 1992) Crown fire spread rate (m/min)
     RSC = 60 * (1 - exp(-0.0497 * ISI)) * FME / FMEavg
     # Return at this point, if specified by caller
-    if(option == "RSC"):
+    if option == "RSC":
         return RSC
     # Crown Fraction Burned
     CFB = np.where(RSC > RSS, CFBcalc(FUELTYPE, FMC, SFC, RSS, CBH), 0)
     # Return at this point, if specified by caller
-    if (option == "CFB"):
+    if option == "CFB":
         return CFB
     # Eq. 65 (FCFDG 1992) Calculate Rate of spread (m/min)
     ROS = np.where(RSC > RSS, RSS + (CFB)*(RSC-RSS), RSS)
