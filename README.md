@@ -1,6 +1,10 @@
 # pycffdrs
 
-Python port of https://cran.r-project.org/package=cffdrs
+[![Issues](https://img.shields.io/github/issues/Sybrand/pycffdrs.svg?style=for-the-badge)](/../../issues)
+[![MIT License](https://img.shields.io/github/license/Sybrand/pycffdrs.svg?style=for-the-badge)](/LICENSE)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sybrand_pycffdrs&metric=alert_status)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
+
+Python port of <https://cran.r-project.org/package=cffdrs>
 
 The intention is to:
 
@@ -74,7 +78,7 @@ These instructions assume a clean Ubuntu 20.04 desktop installation. The develop
 
 #### Install Python Poetry
 
-Install python poetry https://python-poetry.org/ ; right now the install doesn't work very well on Ubuntu 20.04 :()
+Install python poetry <https://python-poetry.org/> ; right now the install doesn't work very well on Ubuntu 20.04 :()
 
 ```bash
 sudo apt install python-is-python3
@@ -106,13 +110,13 @@ Matching the R code as close as possible, ignoring python conventions in favour 
 
 - Making use of numpy extensively.
 
-### Numba - http://numba.pydata.org/
+### Numba - <http://numba.pydata.org/>
 
 Considered using numba, but decided against it. It's hard to debug, takes extra effort to make work, and has python compatibility constraints.
 
 ### Publishing
 
-Currently publishing to TestPyPI: https://test.pypi.org/project/pycffdrs/
+Currently publishing to TestPyPI: <https://test.pypi.org/project/pycffdrs/>
 
 ```bash
 poetry build
@@ -124,7 +128,6 @@ poetry publish -r testpypi
 ## License
 
 This project HAS TO use GNU GENERAL PUBLIC LICENSE Version 2+, as it's a derivative work of
-https://cran.r-project.org/web/packages/cffdrs/index.html.
+<https://cran.r-project.org/web/packages/cffdrs/index.html>.
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sybrand_pycffdrs&metric=alert_status)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)

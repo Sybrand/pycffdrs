@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache poetry installer
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache-poetry-installer
         env:
           cache-name: cache-poetry-installer
@@ -33,7 +33,7 @@ jobs:
           poetry config virtualenvs.in-project false
       # poetry cache folder: /home/runner/.cache/pypoetry
       - name: Cache poetry
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-poetry
         with:
