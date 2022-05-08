@@ -11,38 +11,11 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        R: ["3.5.2"]
-    env:
-      RENV_PATHS_ROOT: ~/.local/share/renv
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
-      - name: Install libgdal-dev
-        # The python gdal and R component relies on libgdal-dev being installed.
-        run: |
-          sudo apt-get update --fix-missing && sudo apt-get -y install libgdal-dev
-      - uses: r-lib/actions/setup-r@v1
-        with:
-          r-version: ${{ matrix.R }}
-      - name: Cache renv (api)
-        # You have to create the renv.lock file on your local machine
-        # install.packages("renv")
-        # renv::install("cffdrs", dependencies = TRUE)
-        # renv::snapshot()
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.RENV_PATHS_ROOT }}
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-renv-
-      - name: Restore R packages
-        working-directory: ./r
-        shell: Rscript {0}
-        run: |
-          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
-          renv::restore()
+        uses: actions/checkout@v3
       - name: Cache poetry installer
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache-poetry-installer
         env:
           cache-name: cache-poetry-installer
@@ -63,7 +36,7 @@ jobs:
           poetry config virtualenvs.in-project false
       # poetry cache folder: /home/runner/.cache/pypoetry
       - name: Cache poetry
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-poetry
         with:
@@ -73,7 +46,7 @@ jobs:
             ${{ runner.os }}-poetry-cache-
       - name: Install python dependencies
         run: |
-          poetry install
+          poetry install --no-dev
       - name: Test
         run: |
           poetry run pytest
