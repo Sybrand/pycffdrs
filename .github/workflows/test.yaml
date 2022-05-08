@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
   pull_request:
@@ -6,8 +6,11 @@ on:
       - main
 jobs:
   lint:
-    name: Lint
+    name: Test
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [3.8]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -44,6 +47,6 @@ jobs:
       - name: Install python dependencies
         run: |
           poetry install
-      - name: Lint
+      - name: Test
         run: |
-          poetry run pylint --rcfile=.pylintrc pycffdrs/*.py tests/*.py;
+          poetry run pytest
