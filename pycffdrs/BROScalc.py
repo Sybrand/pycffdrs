@@ -5,7 +5,7 @@ from numpy import ndarray, exp
 from pycffdrs.ROScalc import ROScalc
 
 
-def BROScalc(
+def BROScalc(  # pylint: disable=too-many-arguments
         FUELTYPE: ndarray,
         FFMC: ndarray,
         BUI: ndarray,

@@ -1,4 +1,3 @@
-
 """
 Test pycffdrs by comparing it to output from the R cffdrs package.
 """
