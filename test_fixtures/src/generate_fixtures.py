@@ -82,6 +82,7 @@ def rsc_generator(array_length: int) -> List[float]:
 
 def hr_generator(array_length: int) -> List[float]:
     """ Build a list of random hr """
+    return [random.uniform(0, 100) for _ in range(array_length)]
 
 
 def wsv_generator(array_length: int) -> List[float]:

@@ -27,7 +27,8 @@ def DISTtcalc(FUELTYPE: ndarray, ROSeq: ndarray, HR: ndarray, CFB: ndarray):
     """
     # Eq. 72 (FCFDG 1992)
     # Calculate the alpha constant for the DISTt calculation
-    alpha = np.where(FUELTYPE == "C1" | FUELTYPE == "O1A" | FUELTYPE == "O1B" | FUELTYPE == "S1" | FUELTYPE == "S2" | FUELTYPE == "S3" | FUELTYPE == "D1", 0.115,
+    alpha = np.where(np.isin(FUELTYPE, ("C1", "O1A", "O1B", "S1", "S2", "S3", "D1")),
+                     0.115,
                      0.115 - 18.8 * (CFB**2.5) * exp(-8 * CFB))
     # Eq. 71 (FCFDG 1992) Calculate Head fire spread distance
     DISTt = ROSeq * (HR + exp(-alpha * HR) / alpha - 1 / alpha)
