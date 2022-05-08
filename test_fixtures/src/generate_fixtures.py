@@ -75,6 +75,11 @@ def rsc_generator(array_length: int) -> List[float]:
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
+def hr_generator(array_length: int) -> List[float]:
+    """ Build a list of random hr """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
 class TestGenerator(ABC):
     """ Abstract base class to assist in generating test data. """
 
@@ -298,6 +303,26 @@ class C6calcGenerator(TestGenerator):
                      'result': [value for value in r_result]})
 
 
+class DISTtcalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for DISTtcalc, and call R. """
+        FUELTYPE = fuel_type_generator(array_length)
+        ROSeq = ros_generator(array_length)
+        HR = hr_generator(array_length)
+        CFB = cfb_generator(array_length)
+
+        r_result = self.cffdrs._DISTtcalc(
+            StrVector(FUELTYPE),
+            FloatVector(ROSeq),
+            FloatVector(HR),
+            FloatVector(CFB))
+
+        data.append({'input': {
+            'FUELTYPE': FUELTYPE, 'ROSeq': ROSeq, 'HR': HR, 'CFB': CFB},
+            'result': [value for value in r_result]})
+
+
 if __name__ == "__main__":
     BEcalcGenerator('../tests/BEcalc.json').generate()
     fwiCalcGenerator('../tests/fwiCalc.json').generate()
@@ -306,3 +331,4 @@ if __name__ == "__main__":
     CFBCalcGenerator('../tests/CFBcalc.json').generate()
     ROScalcGenerator('../tests/ROScalc.json').generate()
     C6calcGenerator('../tests/C6calc.json').generate()
+    DISTtcalcGenerator('../tests/DISTtcalc.json').generate()

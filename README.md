@@ -29,7 +29,7 @@ The intention is to:
 - [ ] BROScalc
 - [x] CFBcalc
 - [x] buiCalc
-- [ ] DISTtcalc
+- [x] DISTtcalc
 - [ ] ffmcCalc
 - [ ] Flcalc
 - [ ] FMCcalc
