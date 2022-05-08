@@ -28,7 +28,7 @@ The intention is to:
 - [x] github actions (static analysis, unit tests)
 - [ ] BROScalc
 - [x] CFBcalc
-- [ ] buiCalc
+- [x] buiCalc
 - [ ] DISTtcalc
 - [ ] ffmcCalc
 - [ ] Flcalc
