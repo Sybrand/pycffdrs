@@ -30,7 +30,7 @@ The intention is to:
 - [x] CFBcalc
 - [x] buiCalc
 - [x] DISTtcalc
-- [ ] ffmcCalc
+- [x] ffmcCalc
 - [ ] Flcalc
 - [ ] FMCcalc
 - [ ] FROScalc
