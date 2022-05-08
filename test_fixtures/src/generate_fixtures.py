@@ -7,6 +7,11 @@ from rpy2.robjects.vectors import FloatVector, StrVector, BoolVector
 import rpy2.robjects as robjs
 
 
+class UnknownTypeError(Exception):
+    """ Exception raised when an unknown type is passed to the generator """
+    pass
+
+
 def get_random_fuel_type() -> str:
     """ Get a random fuel type """
     # We include a garbage fuel type.
@@ -155,7 +160,7 @@ class TestGenerator(ABC):
                 elif isinstance(value[0], str):
                     inputs.append(StrVector(value))
                 else:
-                    raise "Unknown type"
+                    raise UnknownTypeError
             else:
                 inputs.append([])
         r_result = function(*inputs)
