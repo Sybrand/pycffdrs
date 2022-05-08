@@ -11,9 +11,9 @@ def DISTtcalc(FUELTYPE: ndarray, ROSeq: ndarray, HR: ndarray, CFB: ndarray):
        Calculate the Head fire spread distance at time t. In the documentation
        this variable is just "D".
 
-       All variables names are laid out in the same manner as Forestry Canada 
-       Fire Danger Group (FCFDG) (1992). Development and Structure of the 
-       Canadian Forest Fire Behavior Prediction System." Technical Report 
+       All variables names are laid out in the same manner as Forestry Canada
+       Fire Danger Group (FCFDG) (1992). Development and Structure of the
+       Canadian Forest Fire Behavior Prediction System." Technical Report
        ST-X-3, Forestry Canada, Ottawa, Ontario.
 
      Args:
