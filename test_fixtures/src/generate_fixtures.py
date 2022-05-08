@@ -145,6 +145,23 @@ class TestGenerator(ABC):
         with open(self.filename, 'w') as outfile:
             json.dump(data, outfile, indent=4)
 
+    def append_result(self, data: List[Dict[str, List]], input: Dict[str, List], function):
+        """ Append result of R function to data. """
+        inputs = []
+        for value in input.values():
+            if (len(value) > 0):
+                if isinstance(value[0], float):
+                    inputs.append(FloatVector(value))
+                elif isinstance(value[0], str):
+                    inputs.append(StrVector(value))
+                else:
+                    raise "Unknown type"
+            else:
+                inputs.append([])
+        r_result = function(*inputs)
+
+        data.append({'input': input, 'result': [value for value in r_result]})
+
 
 class BEcalcGenerator(TestGenerator):
 
@@ -164,26 +181,22 @@ class fwiCalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for FWIcalc, and call R. """
-        # initial spread index range is from 0 to unlimited.
-        isi = [random.uniform(0, 110) for _ in range(array_length)]
-        # buildup index range is from 0 to inlimited.
-        bui = bui_generator(array_length)
-        # calculate
-        r_result = self.cffdrs._fwiCalc(FloatVector(isi), FloatVector(bui))
-        # add to data
-        data.append({'input': {'isi': isi, 'bui': bui}, 'result': [
-                    value for value in r_result]})
+        input = dict(  # initial spread index range is from 0 to unlimited.
+            isi=[random.uniform(0, 110) for _ in range(array_length)],
+            # buildup index range is from 0 to inlimited.
+            bui=bui_generator(array_length))
+
+        self.append_result(data, input, self.cffdrs._fwiCalc)
 
 
 class buiGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for BUIcalc, and call R. """
-        dmc = [random.uniform(0, 610) for _ in range(array_length)]
-        dc = [random.uniform(-10, 110) for _ in range(array_length)]
-        r_result = self.cffdrs._buiCalc(FloatVector(dmc), FloatVector(dc))
-        data.append({'input': {'dmc': dmc, 'dc': dc}, 'result': [
-                    value for value in r_result]})
+        input = dict(dmc=[random.uniform(0, 610) for _ in range(array_length)],
+                     dc=[random.uniform(-10, 110) for _ in range(array_length)])
+
+        self.append_result(data, input, self.cffdrs._buiCalc)
 
 
 class ISIcalcGenerator(TestGenerator):
@@ -253,33 +266,17 @@ class ROScalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for ROScalc, and call R. """
-        FUELTYPE = fuel_type_generator(array_length)
-        ISI = isi_generator(array_length)
-        BUI = bui_generator(array_length)
-        FMC = fmc_generator(array_length)
-        SFC = sfc_generator(array_length)
-        PC = pc_generator(array_length)
-        PDF = pdf_generator(array_length)
-        CC = cc_generator(array_length)
-        CBH = cbh_generator(array_length)
+        input = dict(FUELTYPE=fuel_type_generator(array_length),
+                     ISI=isi_generator(array_length),
+                     BUI=bui_generator(array_length),
+                     FMC=fmc_generator(array_length),
+                     SFC=sfc_generator(array_length),
+                     PC=pc_generator(array_length),
+                     PDF=pdf_generator(array_length),
+                     CC=cc_generator(array_length),
+                     CBH=cbh_generator(array_length))
 
-        r_result = self.cffdrs._ROScalc(
-            StrVector(FUELTYPE),
-            FloatVector(ISI),
-            FloatVector(BUI),
-            FloatVector(FMC),
-            FloatVector(SFC),
-            FloatVector(PC),
-            FloatVector(PDF),
-            FloatVector(CC),
-            FloatVector(CBH))
-
-        data.append({'input':
-                     {
-                         'FUELTYPE': FUELTYPE, 'ISI': ISI, 'BUI': BUI, 'FMC': FMC, 'SFC': SFC,
-                         'PC': PC, 'PDF': PDF, 'CC': CC, 'CBH': CBH
-                     },
-                     'result': [value for value in r_result]})
+        self.append_result(data, input, self.cffdrs._ROScalc)
 
 
 class C6calcGenerator(TestGenerator):
@@ -337,75 +334,45 @@ class DISTtcalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for DISTtcalc, and call R. """
-        FUELTYPE = fuel_type_generator(array_length)
-        ROSeq = ros_generator(array_length)
-        HR = hr_generator(array_length)
-        CFB = cfb_generator(array_length)
+        input = dict(
+            FUELTYPE=fuel_type_generator(array_length),
+            ROSeq=ros_generator(array_length),
+            HR=hr_generator(array_length),
+            CFB=cfb_generator(array_length))
 
-        r_result = self.cffdrs._DISTtcalc(
-            StrVector(FUELTYPE),
-            FloatVector(ROSeq),
-            FloatVector(HR),
-            FloatVector(CFB))
-
-        data.append({'input': {
-            'FUELTYPE': FUELTYPE, 'ROSeq': ROSeq, 'HR': HR, 'CFB': CFB},
-            'result': [value for value in r_result]})
+        self.append_result(data, input, self.cffdrs._DISTtcalc)
 
 
 class BROScalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for BROScalc, and call R. """
-        FUELTYPE = fuel_type_generator(array_length)
-        FFMC = ffmc_generator(array_length)
-        BUI = bui_generator(array_length)
-        WSV = wsv_generator(array_length)
-        FMC = fmc_generator(array_length)
-        SFC = sfc_generator(array_length)
-        PC = pc_generator(array_length)
-        PDF = pdf_generator(array_length)
-        CC = cc_generator(array_length)
-        CBH = cbh_generator(array_length)
+        input = dict(FUELTYPE=fuel_type_generator(array_length),
+                     FFMC=ffmc_generator(array_length),
+                     BUI=bui_generator(array_length),
+                     WSV=wsv_generator(array_length),
+                     FMC=fmc_generator(array_length),
+                     SFC=sfc_generator(array_length),
+                     PC=pc_generator(array_length),
+                     PDF=pdf_generator(array_length),
+                     CC=cc_generator(array_length),
+                     CBH=cbh_generator(array_length))
 
-        r_result = self.cffdrs._BROScalc(
-            StrVector(FUELTYPE),
-            FloatVector(FFMC),
-            FloatVector(BUI),
-            FloatVector(WSV),
-            FloatVector(FMC),
-            FloatVector(SFC),
-            FloatVector(PC),
-            FloatVector(PDF),
-            FloatVector(CC),
-            FloatVector(CBH))
-
-        data.append({'input': {
-            'FUELTYPE': FUELTYPE, 'FFMC': FFMC, 'BUI': BUI, 'WSV': WSV, 'FMC': FMC, 'SFC': SFC,
-            'PC': PC, 'PDF': PDF, 'CC': CC, 'CBH': CBH
-        }, 'result': [value for value in r_result]})
+        self.append_result(data, input, self.cffdrs._BROScalc)
 
 
 class ffmcCalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for ffmcCalc, and call R. """
-        ffmc_yda = ffmc_generator(array_length)
-        temp = temp_generator(array_length)
-        rh = rh_generator(array_length)
-        ws = ws_generator(array_length)
-        prec = prec_generator(array_length)
-
-        r_result = self.cffdrs._ffmcCalc(
-            FloatVector(ffmc_yda),
-            FloatVector(temp),
-            FloatVector(rh),
-            FloatVector(ws),
-            FloatVector(prec))
-
-        data.append({'input': {
-            'ffmc_yda': ffmc_yda, 'temp': temp, 'rh': rh, 'ws': ws, 'prec': prec},
-            'result': [value for value in r_result]})
+        input = {
+            'ffmc_yda': ffmc_generator(array_length),
+            'temp': temp_generator(array_length),
+            'rh': rh_generator(array_length),
+            'ws': ws_generator(array_length),
+            'prec': prec_generator(array_length)
+        }
+        self.append_result(data, input, self.cffdrs._ffmcCalc)
 
 
 if __name__ == "__main__":
