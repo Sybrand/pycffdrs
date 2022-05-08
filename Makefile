@@ -16,3 +16,6 @@ style:
 test:
 	# Run tests
 	$(POETRY_RUN) pytest
+
+notebook:
+	PYTHONPATH=${shell pwd} JUPYTER_PATH=${shell pwd} $(POETRY_RUN) jupyter notebook --ip 0.0.0.0

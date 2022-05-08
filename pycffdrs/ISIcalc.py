@@ -26,7 +26,6 @@ def ISIcalc(ffmc: ndarray,
             ws: ndarray,
             fbpMod: Union[ndarray, None, bool] = False) -> ndarray:
     """
-    TODO: switch to using numpy arrays as in fwi
     Computes the Initial Spread Index From the FWI System.
 
     Keyword arguments:
