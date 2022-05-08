@@ -2,7 +2,7 @@
 
 [![Issues](https://img.shields.io/github/issues/Sybrand/pycffdrs.svg?style=for-the-badge)](/../../issues)
 [![MIT License](https://img.shields.io/github/license/Sybrand/pycffdrs.svg?style=for-the-badge)](/LICENSE)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sybrand_pycffdrs&metric=alert_status&style=for-the-badge)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sybrand_pycffdrs&metric=alert_status)](https://sonarcloud.io/dashboard?id=Sybrand_pycffdrs)
 
 Python port of <https://cran.r-project.org/package=cffdrs>
 
