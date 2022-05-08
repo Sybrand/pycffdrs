@@ -34,17 +34,17 @@ The intention is to:
 - [ ] ISIcalc
 - [ ] LBcalc
 - [ ] LBtcalc
-- [ ] ROScalc
+- [x] ROScalc
 - [ ] ROStcalc
 - [ ] SFCcalc
 - [ ] Slopecalc
 - [ ] TFCcalc
+- [x] BEcalc
+- [x] C6calc
+- [x] fwiCalc
 
 ### 2nd release
 
-- [x] BEcalc
-- [ ] BEcalc - make it take numpy arrays
-- [ ] C6calc
 - [ ] dcCalc
 - [ ] direction
 - [ ] dmcCalc
@@ -53,7 +53,6 @@ The intention is to:
 - [ ] fbpRaster
 - [ ] fireSeason
 - [ ] fwi
-- [x] fwiCalc
 - [ ] fwiRaster
 - [ ] getvaluesblock_staticfix
 - [ ] gfmc
