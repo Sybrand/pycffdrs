@@ -389,11 +389,8 @@ class FIcalcGenerator(TestGenerator):
 
     def create_record(self, data: List[Dict[str, List]], array_length: int):
         """ Create random input data for FIcalc, and call R. """
-        input = {
-            'FC': fc_generator(array_length),
-            'ROS': ros_generator(array_length)
-        }
-        self.append_result(data, input, self.cffdrs._FIcalc)
+        self.append_result(data, dict(FC=fc_generator(array_length),
+                                      ROS=ros_generator(array_length)), self.cffdrs._FIcalc)
 
 
 if __name__ == "__main__":
