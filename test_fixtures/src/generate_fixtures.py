@@ -115,6 +115,11 @@ def prec_generator(array_length: int) -> List[float]:
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
+def fc_generator(array_length: int) -> List[float]:
+    """ Build a list of random fuel consumption """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
 class TestGenerator(ABC):
     """ Abstract base class to assist in generating test data. """
 
@@ -380,6 +385,17 @@ class ffmcCalcGenerator(TestGenerator):
         self.append_result(data, input, self.cffdrs._ffmcCalc)
 
 
+class FIcalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for FIcalc, and call R. """
+        input = {
+            'FC': fc_generator(array_length),
+            'ROS': ros_generator(array_length)
+        }
+        self.append_result(data, input, self.cffdrs._FIcalc)
+
+
 if __name__ == "__main__":
     BEcalcGenerator('../tests/BEcalc.json').generate()
     fwiCalcGenerator('../tests/fwiCalc.json').generate()
@@ -391,3 +407,4 @@ if __name__ == "__main__":
     BROScalcGenerator('../tests/BROScalc.json').generate()
     DISTtcalcGenerator('../tests/DISTtcalc.json').generate()
     ffmcCalcGenerator('../tests/ffmcCalc.json').generate()
+    FIcalcGenerator('../tests/FIcalc.json').generate()
