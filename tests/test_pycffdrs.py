@@ -15,6 +15,7 @@ from pycffdrs.C6calc import C6calc
 from pycffdrs.BROScalc import BROScalc
 from pycffdrs.DISTtcalc import DISTtcalc
 from pycffdrs.ffmcCalc import ffmcCalc
+from pycffdrs.FIcalc import FIcalc
 
 
 def generic_test(filename, function):
@@ -90,3 +91,8 @@ def test_DISTtcalc():
 def test_ffmcCalc():
     """ Test ffmcCalc by comparing output from R with that of Python. """
     generic_test('tests/ffmcCalc.json', ffmcCalc)
+
+
+def test_FIcalc():
+    """ Test FIcalc by comparing output from R with that of Python. """
+    generic_test('tests/FIcalc.json', FIcalc)

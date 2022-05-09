@@ -31,7 +31,7 @@ The intention is to:
 - [x] buiCalc
 - [x] DISTtcalc
 - [x] ffmcCalc
-- [ ] Flcalc
+- [x] Flcalc
 - [ ] FMCcalc
 - [ ] FROScalc
 - [ ] hffmc
