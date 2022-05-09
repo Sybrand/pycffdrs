@@ -9,9 +9,9 @@ def FIcalc(FC: ndarray, ROS: ndarray):
      Description:
        Calculate the Predicted Fire Intensity
 
-       All variables names are laid out in the same manner as Forestry Canada 
-       Fire Danger Group (FCFDG) (1992). Development and Structure of the 
-       Canadian Forest Fire Behavior Prediction System." Technical Report 
+       All variables names are laid out in the same manner as Forestry Canada
+       Fire Danger Group (FCFDG) (1992). Development and Structure of the
+       Canadian Forest Fire Behavior Prediction System." Technical Report
        ST-X-3, Forestry Canada, Ottawa, Ontario.
 
      Args:
