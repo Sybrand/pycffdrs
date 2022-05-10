@@ -27,7 +27,6 @@ def FMCcalc(LAT: ndarray, LONG: ndarray, ELV: ndarray, DJ: ndarray, D0: ndarray)
        FMC:    Foliar Moisture Content
     """
     # Initialize vectors
-    FMC = np.full(len(LAT), -1)
     LATN = np.full(len(LAT), 0)
     # Calculate Normalized Latitude
     # Eqs. 1 & 3 (FCFDG 1992)
