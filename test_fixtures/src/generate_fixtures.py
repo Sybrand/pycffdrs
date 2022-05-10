@@ -120,6 +120,26 @@ def fc_generator(array_length: int) -> List[float]:
     return [random.uniform(0, 100) for _ in range(array_length)]
 
 
+def lat_generator(array_length: int) -> List[float]:
+    """ Build a list of random latitudes """
+    return [random.uniform(-90, 90) for _ in range(array_length)]
+
+
+def long_generator(array_length: int) -> List[float]:
+    """ Build a list of random longitudes """
+    return [random.uniform(-180, 180) for _ in range(array_length)]
+
+
+def day_of_year_generator(array_length: int) -> List[float]:
+    """ Build a list of random day of year """
+    return [random.uniform(1, 365) for _ in range(array_length)]
+
+
+def elevation_generator(array_length: int) -> List[float]:
+    """ Build a list of random elevations """
+    return [random.uniform(0, 10000) for _ in range(array_length)]
+
+
 class TestGenerator(ABC):
     """ Abstract base class to assist in generating test data. """
 
@@ -393,6 +413,17 @@ class FIcalcGenerator(TestGenerator):
                                       ROS=ros_generator(array_length)), self.cffdrs._FIcalc)
 
 
+class FMCcalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for FMCcalc, and call R. """
+        self.append_result(data, dict(LAT=lat_generator(array_length),
+                                      LONG=long_generator(array_length),
+                                      ELV=elevation_generator(array_length),
+                                      DJ=day_of_year_generator(array_length),
+                                      D0=day_of_year_generator(array_length)), self.cffdrs._FMCcalc)
+
+
 if __name__ == "__main__":
     BEcalcGenerator('../tests/BEcalc.json').generate()
     fwiCalcGenerator('../tests/fwiCalc.json').generate()
@@ -405,3 +436,4 @@ if __name__ == "__main__":
     DISTtcalcGenerator('../tests/DISTtcalc.json').generate()
     ffmcCalcGenerator('../tests/ffmcCalc.json').generate()
     FIcalcGenerator('../tests/FIcalc.json').generate()
+    FMCcalcGenerator('../tests/FMCcalc.json').generate()
