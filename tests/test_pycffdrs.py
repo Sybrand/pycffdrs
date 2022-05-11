@@ -1,7 +1,6 @@
 """
 Test pycffdrs by comparing it to output from the R cffdrs package.
 """
-from http.client import FORBIDDEN
 import json
 from typing import List, Dict
 import numpy as np
