@@ -1,6 +1,7 @@
 """
 Test pycffdrs by comparing it to output from the R cffdrs package.
 """
+from http.client import FORBIDDEN
 import json
 from typing import List, Dict
 import numpy as np
@@ -17,6 +18,7 @@ from pycffdrs.DISTtcalc import DISTtcalc
 from pycffdrs.ffmcCalc import ffmcCalc
 from pycffdrs.FIcalc import FIcalc
 from pycffdrs.FMCcalc import FMCcalc
+from pycffdrs.FROScalc import FROScalc
 
 
 def generic_test(filename, function):
@@ -102,3 +104,8 @@ def test_FIcalc():
 def test_FMCcalc():
     """ Test FMCcalc by comparing output from R with that of Python. """
     generic_test('tests/FMCcalc.json', FMCcalc)
+
+
+def test_FROScalc():
+    """ Test FROScalc by comparing output from R with that of Python """
+    generic_test('tests/FROScalc.json', FROScalc)

@@ -140,6 +140,11 @@ def elevation_generator(array_length: int) -> List[float]:
     return [random.uniform(0, 10000) for _ in range(array_length)]
 
 
+def lb_generator(array_length: int) -> List[float]:
+    """ Build a list of random length to breadh ratios """
+    return [random.uniform(0, 100) for _ in range(array_length)]
+
+
 class TestGenerator(ABC):
     """ Abstract base class to assist in generating test data. """
 
@@ -424,6 +429,15 @@ class FMCcalcGenerator(TestGenerator):
                                       D0=day_of_year_generator(array_length)), self.cffdrs._FMCcalc)
 
 
+class FROScalcGenerator(TestGenerator):
+
+    def create_record(self, data: List[Dict[str, List]], array_length: int):
+        """ Create random input data for FROScalcGenerator, and call R. """
+        self.append_result(data, dict(ROS=ros_generator(array_length),
+                                      BROS=ros_generator(array_length),
+                                      LB=lb_generator(array_length)), self.cffdrs._FROScalc)
+
+
 if __name__ == "__main__":
     BEcalcGenerator('../tests/BEcalc.json').generate()
     fwiCalcGenerator('../tests/fwiCalc.json').generate()
@@ -437,3 +451,4 @@ if __name__ == "__main__":
     ffmcCalcGenerator('../tests/ffmcCalc.json').generate()
     FIcalcGenerator('../tests/FIcalc.json').generate()
     FMCcalcGenerator('../tests/FMCcalc.json').generate()
+    FROScalcGenerator('../tests/FROScalc.json').generate()
