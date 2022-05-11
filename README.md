@@ -33,7 +33,7 @@ The intention is to:
 - [x] ffmcCalc
 - [x] Flcalc
 - [x] FMCcalc
-- [ ] FROScalc
+- [x] FROScalc
 - [ ] hffmc
 - [ ] ISIcalc
 - [ ] LBcalc
