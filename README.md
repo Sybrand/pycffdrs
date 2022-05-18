@@ -35,7 +35,7 @@ The intention is to:
 - [x] FMCcalc
 - [x] FROScalc
 - [ ] hffmc
-- [ ] ISIcalc
+- [x] ISIcalc
 - [ ] LBcalc
 - [ ] LBtcalc
 - [x] ROScalc
